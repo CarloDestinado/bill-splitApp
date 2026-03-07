@@ -1,0 +1,271 @@
+.guest-bill-search {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  padding: 2rem;
+}
+
+.search-header {
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.back-link {
+  display: inline-block;
+  color: #666;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  color: #4CAF50;
+}
+
+.search-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  color: #666;
+  margin: 0;
+}
+
+.search-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.search-card {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.code-input {
+  font-family: monospace;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.25rem;
+}
+
+.btn {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #2E7D32;
+}
+
+.btn-secondary {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-full {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.bill-found {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #4CAF50;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 auto 1rem;
+}
+
+.bill-found h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.bill-details {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.bill-details h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.bill-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4CAF50;
+  margin: 0.5rem 0;
+}
+
+.bill-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0 0;
+}
+
+.action-buttons {
+  margin-bottom: 1rem;
+}
+
+.access-info {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  padding: 0.75rem;
+  background-color: #fff3e0;
+  border-radius: 8px;
+}
+
+.search-info {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.search-info h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.search-info ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.search-info li {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.search-info li strong {
+  color: #333;
+}
+
+.info-box {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #fff3e0;
+  border-left: 4px solid #ff9800;
+  border-radius: 8px;
+}
+
+.info-box h4 {
+  font-size: 0.95rem;
+  color: #e65100;
+  margin: 0 0 0.75rem 0;
+}
+
+.info-box ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.info-box li {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .search-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .guest-bill-search {
+    padding: 1rem;
+  }
+
+  .search-header h1 {
+    font-size: 1.5rem;
+  }
+}

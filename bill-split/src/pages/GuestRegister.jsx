@@ -92,7 +92,7 @@ function GuestRegister() {
 
           <div className="bill-info-preview">
             <h3>{bill?.title}</h3>
-            <div className="bill-amount">${parseFloat(bill?.total_amount || 0).toFixed(2)}</div>
+            <div className="bill-amount">₱{parseFloat(bill?.total_amount || 0).toFixed(2)}</div>
           </div>
 
           <form onSubmit={handleRegister}>

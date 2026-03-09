@@ -20,7 +20,8 @@ function Login() {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      const message = err.response?.data?.message || 'Login failed. Please try again.';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -45,6 +46,13 @@ function Login() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-left">
+          <div className="illustration">
+            <img src="/images/Illustration.jpg" alt="Bill Split Illustration" className="illustration-img" />
+            <h3>Make your work easier and organized with Bill Split</h3>
+          </div>
+        </div>
+
+        <div className="login-right">
           <h1>Welcome back!</h1>
           <p className="subtitle">Simplify your workflow and boost your productivity with Bill Split</p>
 
@@ -81,6 +89,10 @@ function Login() {
             🔍 Access Bill via Invitation Code
           </Link>
 
+          <div className="register-text">
+            Don't have an account? <Link to="/register">Register here</Link>
+          </div>
+
           <div className="guest-login-section">
             <p className="guest-label">Continue as Guest</p>
             <form className="guest-form" onSubmit={handleGuestLogin}>
@@ -101,13 +113,6 @@ function Login() {
           <p className="register-text">
             Not a member? <Link to="/register">Register now</Link>
           </p>
-        </div>
-
-        <div className="login-right">
-          <div className="illustration">
-            <img src="/images/Illustration.jpg" alt="Bill Split Illustration" className="illustration-img" />
-            <h3>Make your work easier and organized with Bill Split</h3>
-          </div>
         </div>
       </div>
     </div>

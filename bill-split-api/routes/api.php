@@ -24,16 +24,16 @@ Route::middleware("auth:sanctum")->group(function () {
     Route::get("/user", [UserController::class, "getProfile"]);
     Route::put("/user/update", [UserController::class, "updateProfile"]);
     Route::post("/logout", [AuthController::class, "logout"]);
-    
+
     // Bill routes
     Route::apiResource("/bills", BillController::class);
     Route::post("/bills/{id}/share", [BillController::class, "shareBill"]);
     Route::get("/bills/{id}/users", [BillController::class, "getBillUsers"]);
-    
+
     // Invitation routes
     Route::post("/invitations/create", [InvitationController::class, "createInvitation"]);
     Route::post("/invitations/{id}/accept", [InvitationController::class, "acceptInvitation"]);
-    
+
     // Premium upgrade
     Route::post("/user/upgrade-premium", [UserController::class, "upgradeToPremium"]);
 });

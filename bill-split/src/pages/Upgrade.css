@@ -1,57 +1,92 @@
+/* Upgrade Page - Modern Design */
 .upgrade-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   padding: 2rem;
+  position: relative;
+}
+
+/* Background decoration */
+.upgrade-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 350px;
+  background: var(--gradient-primary);
+  clip-path: ellipse(70% 100% at 50% 0%);
+  z-index: 0;
 }
 
 .upgrade-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .upgrade-header h1 {
   font-size: 2.5rem;
-  color: #333;
-  margin: 0 0 0.5rem 0;
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.75rem 0;
+  font-weight: 800;
+  letter-spacing: -0.025em;
 }
 
 .upgrade-header p {
-  font-size: 1.1rem;
-  color: #666;
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0;
+  font-weight: 500;
 }
 
 .upgrade-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .upgrade-card {
-  background-color: #fff;
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-2xl);
   padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-xl);
   grid-column: 1 / -1;
   text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all var(--transition-base);
+}
+
+.upgrade-card:hover {
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
 }
 
 .upgrade-card.guest-upgrade {
-  border: 2px solid #ff9800;
-  background: linear-gradient(135deg, #fff3e0 0%, #fff 100%);
+  border: 2px solid #fdba74;
+  background: linear-gradient(135deg, #fff7ed 0%, white 100%);
 }
 
 .upgrade-card h2 {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--slate-800);
   margin: 0 0 1rem 0;
+  font-weight: 700;
 }
 
 .upgrade-description {
-  color: #666;
+  color: var(--slate-600);
   margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .upgrade-form {
@@ -61,109 +96,156 @@
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #333;
+  font-weight: 600;
+  color: var(--slate-700);
+  font-size: 0.9rem;
 }
 
 .input-field {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--slate-200);
+  border-radius: var(--radius-lg);
   font-size: 1rem;
   font-family: inherit;
+  transition: all var(--transition-base);
+  color: var(--slate-800);
+  background: white;
 }
 
 .input-field:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
 }
 
 .btn {
   padding: 0.875rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
   text-decoration: none;
   display: inline-block;
-  margin-right: 0.5rem;
 }
 
 .btn-primary {
-  background-color: #4CAF50;
+  background: var(--gradient-primary);
   color: #fff;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
-.btn-primary:hover {
-  background-color: #2E7D32;
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 .btn-secondary {
-  background-color: #e0e0e0;
-  color: #333;
+  background-color: var(--slate-100);
+  color: var(--slate-700);
+  border: 1px solid var(--slate-200);
+  margin-left: 0.75rem;
 }
 
 .btn-secondary:hover {
-  background-color: #d0d0d0;
+  background-color: var(--slate-200);
 }
 
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Plan Cards */
 .plan-card {
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-2xl);
+  padding: 2.5rem 2rem;
+  box-shadow: var(--shadow-xl);
   position: relative;
   text-align: center;
+  border: 2px solid transparent;
+  transition: all var(--transition-base);
+}
+
+.plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.plan-card.current {
+  border-color: var(--slate-200);
 }
 
 .plan-card.premium {
-  border: 2px solid #4CAF50;
+  border-color: var(--primary-400);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, white 100%);
+}
+
+.plan-card.premium:hover {
+  border-color: var(--primary-500);
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
 }
 
 .popular-badge {
   position: absolute;
-  top: -12px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #4CAF50;
+  background: var(--gradient-primary);
   color: #fff;
-  padding: 0.25rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 0.375rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
 }
 
 .plan-card h2 {
   font-size: 1.5rem;
-  color: #333;
-  margin: 0 0 1rem 0;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 700;
 }
 
 .plan-name {
-  font-size: 1rem;
-  color: #666;
+  font-size: 0.95rem;
+  color: var(--slate-500);
   margin-bottom: 1rem;
+  font-weight: 500;
 }
 
 .plan-price {
   font-size: 3rem;
-  font-weight: 700;
-  color: #333;
+  font-weight: 800;
+  color: var(--slate-800);
   margin-bottom: 1.5rem;
+  letter-spacing: -0.025em;
 }
 
 .plan-price span {
   font-size: 1rem;
-  color: #666;
+  color: var(--slate-500);
+  font-weight: 400;
 }
 
 .plan-features {
@@ -174,10 +256,13 @@
 }
 
 .plan-features li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--slate-100);
   font-size: 0.95rem;
-  color: #333;
+  color: var(--slate-700);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
 }
 
 .plan-features li:last-child {
@@ -185,47 +270,53 @@
 }
 
 .plan-features li.disabled {
-  color: #999;
+  color: var(--slate-400);
+  text-decoration: line-through;
 }
 
 .upgrade-btn {
   width: 100%;
-  padding: 1rem;
-  background-color: #4CAF50;
+  padding: 1rem 1.5rem;
+  background: var(--gradient-primary);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
-.upgrade-btn:hover {
-  background-color: #2E7D32;
+.upgrade-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 .upgrade-btn:disabled {
-  background-color: #a5d6a7;
+  background: var(--slate-300);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .error-message {
-  background-color: #ffebee;
-  color: #c62828;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #dc2626;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  border: 1px solid #fecaca;
 }
 
 .success-message {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  color: #16a34a;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  border: 1px solid #bbf7d0;
 }
 
 @media (max-width: 768px) {
@@ -234,6 +325,10 @@
   }
 
   .upgrade-header h1 {
-    font-size: 1.8rem;
+    font-size: 1.875rem;
+  }
+
+  .upgrade-container {
+    grid-template-columns: 1fr;
   }
 }

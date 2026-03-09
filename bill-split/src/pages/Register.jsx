@@ -5,9 +5,11 @@ import './Register.css';
 
 function Register() {
   const [formData, setFormData] = useState({
-    first_name: '',
     last_name: '',
+    first_name: '',
+    nickname: '',
     email: '',
+    username: '',
     password: '',
     password_confirmation: '',
   });
@@ -32,13 +34,29 @@ function Register() {
       return;
     }
 
+    if (formData.last_name.includes(' ')) {
+      setError('Last name cannot contain spaces');
+      return;
+    }
+
+    if (formData.first_name.includes(' ')) {
+      setError('First name cannot contain spaces');
+      return;
+    }
+
     setLoading(true);
 
     try {
       await register(formData);
-      navigate('/dashboard');
+      navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      const errors = err.response?.data?.errors;
+      if (errors) {
+        const firstError = Object.values(errors)[0];
+        setError(Array.isArray(firstError) ? firstError[0] : firstError);
+      } else {
+        setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -48,6 +66,13 @@ function Register() {
     <div className="register-page">
       <div className="register-container">
         <div className="register-left">
+          <div className="illustration">
+            <img src="/images/Illustration.jpg" alt="Bill Split Illustration" className="illustration-img" />
+            <h3>Make your work easier and organized with Bill Split</h3>
+          </div>
+        </div>
+
+        <div className="register-right">
           <h1>Create Account</h1>
           <p className="subtitle">Join Bill Split and simplify your bill management</p>
 
@@ -57,23 +82,32 @@ function Register() {
             <div className="form-row">
               <input
                 type="text"
-                name="first_name"
-                placeholder="First Name"
-                className="input-field"
-                value={formData.first_name}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
                 name="last_name"
-                placeholder="Last Name"
+                placeholder="Last Name (no spaces)"
                 className="input-field"
                 value={formData.last_name}
                 onChange={handleChange}
                 required
               />
+              <input
+                type="text"
+                name="first_name"
+                placeholder="First Name (no spaces)"
+                className="input-field"
+                value={formData.first_name}
+                onChange={handleChange}
+                required
+              />
             </div>
+            <input
+              type="text"
+              name="nickname"
+              placeholder="Nickname (required, unique)"
+              className="input-field"
+              value={formData.nickname}
+              onChange={handleChange}
+              required
+            />
             <input
               type="email"
               name="email"
@@ -84,9 +118,18 @@ function Register() {
               required
             />
             <input
+              type="text"
+              name="username"
+              placeholder="Username (required, unique)"
+              className="input-field"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+            <input
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder="Password (8-16 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char)"
               className="input-field"
               value={formData.password}
               onChange={handleChange}
@@ -115,13 +158,6 @@ function Register() {
           <p className="login-text">
             Already have an account? <Link to="/login">Login here</Link>
           </p>
-        </div>
-
-        <div className="register-right">
-          <div className="illustration">
-            <img src="/images/Illustration.jpg" alt="Bill Split Illustration" className="illustration-img" />
-            <h3>Make your work easier and organized with Bill Split</h3>
-          </div>
         </div>
       </div>
     </div>

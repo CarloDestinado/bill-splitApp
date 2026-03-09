@@ -56,7 +56,7 @@ function BillDetail() {
             <h1>{bill.title}</h1>
             <span className={`status ${bill.status}`}>{bill.status}</span>
           </div>
-          <div className="bill-total">${parseFloat(bill.total_amount).toFixed(2)}</div>
+          <div className="bill-total">₱{parseFloat(bill.total_amount).toFixed(2)}</div>
           {bill.description && <p className="bill-description">{bill.description}</p>}
           {bill.due_date && (
             <p className="bill-due">Due: {new Date(bill.due_date).toLocaleDateString()}</p>
@@ -75,7 +75,7 @@ function BillDetail() {
                     {user.id === bill.created_by && <span className="creator-badge">Creator</span>}
                   </div>
                   <div className="user-share">
-                    ${parseFloat(user.pivot?.share_amount || 0).toFixed(2)}
+                    ₱{parseFloat(user.pivot?.share_amount || 0).toFixed(2)}
                   </div>
                 </div>
               ))}

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -14,16 +15,38 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'last_name' => ['required', 'string', 'max:255', 'regex:/^\S+$/'],
+            'first_name' => ['required', 'string', 'max:255', 'regex:/^\S+$/'],
+            'nickname' => ['required', 'string', 'max:255', 'unique:users,nickname'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:16',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@₱!%*?&#])[A-Za-z\d@₱!%*?&#]+$/',
+            ],
+        ], [
+            'last_name.regex' => 'Last name cannot contain spaces.',
+            'first_name.regex' => 'First name cannot contain spaces.',
+            'nickname.unique' => 'This nickname has already been taken.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email address has already been registered.',
+            'username.unique' => 'This username has already been taken.',
+            'password.min' => 'Password must be at least 8 characters long.',
+            'password.max' => 'Password cannot be more than 16 characters long.',
+            'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            'password.confirmed' => 'Password confirmation does not match.',
         ]);
 
         $user = User::create([
-            'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'first_name' => $request->first_name,
+            'nickname' => $request->nickname,
             'email' => $request->email,
+            'username' => $request->username,
             'password' => Hash::make($request->password),
             'user_type' => 'registered',
             'account_type' => 'standard',
@@ -32,7 +55,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'User registered successfully',
+            'message' => 'User registered successfully.',
             'user' => $user,
             'token' => $token,
         ], 201);
@@ -52,6 +75,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([

@@ -134,7 +134,7 @@ function Dashboard() {
                     <h3>{bill.title}</h3>
                     <span className={`status ${bill.status}`}>{bill.status}</span>
                   </div>
-                  <div className="bill-amount">${parseFloat(bill.total_amount).toFixed(2)}</div>
+                  <div className="bill-amount">₱{parseFloat(bill.total_amount).toFixed(2)}</div>
                   <p className="bill-description">{bill.description || 'No description'}</p>
                   <div className="bill-footer">
                     <span className="bill-code">Code: {bill.invitation_code}</span>

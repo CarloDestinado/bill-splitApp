@@ -99,7 +99,7 @@ function GuestBillSearch() {
               <h2>Bill Found!</h2>
               <div className="bill-details">
                 <h3>{verifiedBill.title}</h3>
-                <div className="bill-amount">${parseFloat(verifiedBill.total_amount).toFixed(2)}</div>
+                <div className="bill-amount">₱{parseFloat(verifiedBill.total_amount).toFixed(2)}</div>
                 {verifiedBill.description && (
                   <p className="bill-description">{verifiedBill.description}</p>
                 )}

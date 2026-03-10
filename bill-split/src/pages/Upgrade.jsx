@@ -62,6 +62,9 @@ function Upgrade() {
   return (
     <div className="upgrade-page">
       <div className="upgrade-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>
+          ← Back
+        </button>
         <h1>Upgrade Your Account</h1>
         <p>Get unlimited access to all features</p>
       </div>
@@ -129,19 +132,30 @@ function Upgrade() {
       <div className="upgrade-container">
         <div className="plan-card current">
           <h2>Current Plan</h2>
-          <div className="plan-name">{user?.account_type === 'premium' ? 'Premium' : 'Standard'}</div>
-          <div className="plan-price">{user?.account_type === 'premium' ? 'Active' : '$0'}</div>
+          <div className="plan-name">{user?.account_type === 'premium' ? 'Premium' : user?.user_type === 'guest' ? 'Guest' : 'Standard'}</div>
+          <div className="plan-price">{user?.account_type === 'premium' ? 'Active' : user?.user_type === 'guest' ? '$0' : '$0'}</div>
           <ul className="plan-features">
-            {user?.account_type !== 'premium' ? (
+            {user?.user_type === 'guest' && (
               <>
-                <li>✓ Create up to 5 bills/month</li>
+                <li>✓ View bills via invitation code</li>
+                <li>✓ 6 hours access per day</li>
+                <li className="disabled">✗ Create bills</li>
+                <li className="disabled">✗ Invite people</li>
+                <li className="disabled">✗ Unlimited access</li>
+              </>
+            )}
+            {user?.user_type !== 'guest' && user?.account_type !== 'premium' && (
+              <>
+                <li>✓ Create up to 5 bills per month</li>
                 <li>✓ Add up to 3 people per bill</li>
-                <li>✓ Basic invitation system</li>
+                <li>✓ Invitation code system</li>
+                <li>✓ 6 hours guest access per day</li>
                 <li className="disabled">✗ Unlimited bills</li>
                 <li className="disabled">✗ Unlimited people per bill</li>
                 <li className="disabled">✗ Priority support</li>
               </>
-            ) : (
+            )}
+            {user?.account_type === 'premium' && (
               <>
                 <li>✓ Unlimited bills</li>
                 <li>✓ Unlimited people per bill</li>
@@ -159,8 +173,8 @@ function Upgrade() {
             <div className="plan-name">Premium Account</div>
             <div className="plan-price">$9.99<span>/month</span></div>
             <ul className="plan-features">
-              <li>✓ Unlimited bills</li>
-              <li>✓ Unlimited people per bill</li>
+              <li>✓ <strong>Unlimited bills</strong> (no monthly limit)</li>
+              <li>✓ <strong>Unlimited people</strong> per bill</li>
               <li>✓ Priority support</li>
               <li>✓ Advanced analytics</li>
               <li>✓ Custom reminders</li>

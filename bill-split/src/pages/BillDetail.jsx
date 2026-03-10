@@ -10,20 +10,22 @@ function BillDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    loadBill();
-  }, [id]);
-
   const loadBill = async () => {
     try {
       const response = await billAPI.getById(id);
       setBill(response.data.bill);
-    } catch (err) {
+    } catch (error) {
       setError('Failed to load bill details');
+      console.error('Failed to load bill:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadBill();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   if (loading) {
     return <div className="loading">Loading...</div>;

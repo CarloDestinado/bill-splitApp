@@ -5,7 +5,7 @@ import { billAPI } from '../services/api';
 import './Dashboard.css';
 
 function Dashboard() {
-  const { user, logout, isGuest, isPremium, canCreateBill, canAccessBills, remainingAccessHours } = useAuth();
+  const { user, logout, isGuest, isPremium, isStandard, canCreateBill, canAccessBills, remainingAccessHours, remainingBillsThisMonth } = useAuth();
   const navigate = useNavigate();
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -104,9 +104,14 @@ function Dashboard() {
               >
                 + Create Bill
               </button>
-              {!canCreateBill && (
+              {!canCreateBill && isStandard && (
                 <span className="limit-message">
-                  Bill limit reached. <Link to="/upgrade">Upgrade to Premium</Link>
+                  Monthly bill limit reached (5/5). <Link to="/upgrade">Upgrade to Premium</Link> for unlimited bills.
+                </span>
+              )}
+              {!canCreateBill && isGuest && (
+                <span className="limit-message">
+                  Guest users cannot create bills. <Link to="/upgrade">Upgrade to Registered</Link> to create bills.
                 </span>
               )}
             </div>
@@ -114,8 +119,16 @@ function Dashboard() {
 
           {isGuest && !isPremium && (
             <div className="guest-notice">
-              <p>⚠️ Guest users have limited access ({remainingAccessHours} hours remaining today). 
+              <p>⚠️ Guest users have limited access ({remainingAccessHours} hours remaining today).
                 <Link to="/upgrade"> Upgrade to Registered</Link> for full access.
+              </p>
+            </div>
+          )}
+
+          {isStandard && (
+            <div className="bill-limit-notice">
+              <p>📊 Standard Plan: <strong>{remainingBillsThisMonth}</strong> bills remaining this month (5 max).
+                <Link to="/upgrade"> Upgrade to Premium</Link> for unlimited bills.
               </p>
             </div>
           )}
@@ -271,33 +284,14 @@ function CreateBillModal({ onClose, onCreated }) {
 }
 
 function InviteModal({ bill, onClose }) {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [invitationCode, setInvitationCode] = useState(bill.invitation_code);
-
-  const handleInvite = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
-
-    try {
-      await invitationAPI.create({ bill_id: bill.id, invitee_email: email });
-      setSuccess('Invitation sent successfully!');
-      setEmail('');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send invitation');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { isPremium } = useAuth();
+  const invitationCode = bill.invitation_code;
+  const currentPersonCount = bill.users?.length || 0;
+  const maxPersons = isPremium ? 'unlimited' : 3;
+  const canAddMore = isPremium || currentPersonCount < 3;
 
   const copyCode = () => {
     navigator.clipboard.writeText(invitationCode);
-    setSuccess('Code copied to clipboard!');
-    setTimeout(() => setSuccess(''), 2000);
   };
 
   return (
@@ -319,24 +313,25 @@ function InviteModal({ bill, onClose }) {
           </div>
 
           <div className="invite-section">
-            <h3>Invite via Email</h3>
-            <form onSubmit={handleInvite}>
-              {error && <div className="error-message">{error}</div>}
-              {success && <div className="success-message">{success}</div>}
-              <div className="form-group">
-                <input
-                  type="email"
-                  className="input-field"
-                  placeholder="Enter email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Sending...' : 'Send Invitation'}
-              </button>
-            </form>
+            <h3>Current Members</h3>
+            <p className="members-count">
+              <strong>{currentPersonCount}</strong> person{currentPersonCount !== 1 ? 's' : ''} joined
+              {!isPremium && <span> / {maxPersons} max</span>}
+            </p>
+            {!canAddMore && (
+              <p className="limit-warning">
+                ⚠️ Standard plan limit reached. <Link to="/upgrade">Upgrade to Premium</Link> for unlimited members.
+              </p>
+            )}
+          </div>
+
+          <div className="invite-section">
+            <h3>How to Invite</h3>
+            <ol className="invite-steps">
+              <li>Copy the invitation code above</li>
+              <li>Share it with people you want to split the bill with</li>
+              <li>They can enter the code on the <Link to="/guest/search">Guest Bill Search</Link> page</li>
+            </ol>
           </div>
         </div>
       </div>

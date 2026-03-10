@@ -19,26 +19,33 @@ class InvitationController extends Controller
             'invitation_code' => 'required|string',
         ]);
 
-        $invitation = Invitation::where('invitation_code', $request->invitation_code)
-            ->where('status', 'pending')
+        // First, check the bill's invitation_code directly
+        $bill = Bill::where('invitation_code', strtoupper($request->invitation_code))
             ->first();
 
-        if (!$invitation) {
-            return response()->json([
-                'valid' => false,
-                'message' => 'Invalid or expired invitation code',
-            ], 404);
-        }
+        if (!$bill) {
+            // If not found in bills, check invitations table
+            $invitation = Invitation::where('invitation_code', strtoupper($request->invitation_code))
+                ->where('status', 'pending')
+                ->first();
 
-        if ($invitation->isExpired()) {
-            $invitation->update(['status' => 'expired']);
-            return response()->json([
-                'valid' => false,
-                'message' => 'Invitation code has expired',
-            ], 400);
-        }
+            if (!$invitation) {
+                return response()->json([
+                    'valid' => false,
+                    'message' => 'Invalid or expired invitation code',
+                ], 404);
+            }
 
-        $bill = $invitation->bill;
+            if ($invitation->isExpired()) {
+                $invitation->update(['status' => 'expired']);
+                return response()->json([
+                    'valid' => false,
+                    'message' => 'Invitation code has expired',
+                ], 400);
+            }
+
+            $bill = $invitation->bill;
+        }
 
         return response()->json([
             'valid' => true,
@@ -46,8 +53,10 @@ class InvitationController extends Controller
                 'id' => $bill->id,
                 'title' => $bill->title,
                 'total_amount' => $bill->total_amount,
+                'description' => $bill->description,
+                'status' => $bill->status,
+                'invitation_code' => $bill->invitation_code,
             ],
-            'invitation' => $invitation,
         ]);
     }
 
@@ -58,8 +67,25 @@ class InvitationController extends Controller
             'invitation_code' => 'required|string',
         ]);
 
-        // Verify the invitation code is valid
-        $invitation = Invitation::where('invitation_code', $request->invitation_code)
+        // First check if the code is a bill's invitation code
+        $bill = Bill::where('invitation_code', strtoupper($request->invitation_code))->first();
+        
+        if ($bill) {
+            // Bill found, check if email exists
+            $user = User::where('email', $request->email)->first();
+            return response()->json([
+                'exists' => $user !== null,
+                'user_type' => $user ? $user->user_type : null,
+                'bill' => [
+                    'id' => $bill->id,
+                    'title' => $bill->title,
+                    'total_amount' => $bill->total_amount,
+                ],
+            ]);
+        }
+
+        // If not a bill code, check invitations table
+        $invitation = Invitation::where('invitation_code', strtoupper($request->invitation_code))
             ->where('status', 'pending')
             ->where('invitee_email', $request->email)
             ->first();

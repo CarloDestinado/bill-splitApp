@@ -8,10 +8,10 @@ function GuestRegister() {
   const { code } = useParams();
   const [searchParams] = useSearchParams();
   const prefillEmail = searchParams.get('email') || '';
-  
+
   const navigate = useNavigate();
   const { guestRegister } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -25,6 +25,7 @@ function GuestRegister() {
 
   useEffect(() => {
     verifyInvitation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
   const verifyInvitation = async () => {
@@ -50,13 +51,13 @@ function GuestRegister() {
 
     try {
       // Register as guest
-      const regResponse = await guestRegister(formData);
-      
+      await guestRegister(formData);
+
       // Accept the invitation
       if (invitation) {
         await invitationAPI.accept(invitation.id);
       }
-      
+
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');

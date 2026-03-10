@@ -6,7 +6,6 @@ import './GuestBillSearch.css';
 function GuestBillSearch() {
   const [code, setCode] = useState('');
   const [verifiedBill, setVerifiedBill] = useState(null);
-  const [invitation, setInvitation] = useState(null);
   const [email, setEmail] = useState('');
   const [emailChecked, setEmailChecked] = useState(false);
   const [emailExists, setEmailExists] = useState(false);
@@ -26,7 +25,6 @@ function GuestBillSearch() {
       const response = await invitationAPI.verifyCode({ invitation_code: code.toUpperCase() });
       if (response.data.valid) {
         setVerifiedBill(response.data.bill);
-        setInvitation(response.data.invitation);
       } else {
         setError(response.data.message || 'Invalid invitation code');
       }
@@ -43,9 +41,9 @@ function GuestBillSearch() {
     setCheckingEmail(true);
 
     try {
-      const response = await invitationAPI.checkEmail({ 
-        email, 
-        invitation_code: code.toUpperCase() 
+      const response = await invitationAPI.checkEmail({
+        email,
+        invitation_code: code.toUpperCase()
       });
       setEmailExists(response.data.exists);
       setEmailChecked(true);
@@ -61,7 +59,7 @@ function GuestBillSearch() {
       // User has account - redirect to login
       navigate('/login', { state: { email, inviteCode: code.toUpperCase() } });
     } else {
-      // New user - redirect to registration with invitation
+      // New user - redirect to registration with invitation (works with both bill codes and invitation codes)
       navigate(`/guest/register/${code.toUpperCase()}?email=${encodeURIComponent(email)}`);
     }
   };
@@ -127,7 +125,7 @@ function GuestBillSearch() {
                 <div className="email-result">
                   <h3>{emailExists ? 'Account Found!' : 'New User'}</h3>
                   <p className="result-message">
-                    {emailExists 
+                    {emailExists
                       ? 'You have an existing account. Login to access this bill.'
                       : 'No account found. Create a guest account to access this bill.'}
                   </p>
@@ -147,7 +145,7 @@ function GuestBillSearch() {
               )}
 
               <p className="access-info">
-                <strong>Guest Access:</strong> Limited to 6 hours per day. 
+                <strong>Guest Access:</strong> Limited to 6 hours per day.
                 Upgrade to Registered for unlimited access.
               </p>
             </div>

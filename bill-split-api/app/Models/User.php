@@ -71,15 +71,19 @@ class User extends Authenticatable
         if ($this->isPremium()) {
             return true;
         }
-        
+
         // Standard users: max 5 bills per month
         $resetAt = $this->bills_count_reset_at;
         $now = now();
-        
-        if ($resetAt === null || $resetAt->diffInDays($now) >= 30) {
-            return true; // Reset counter
+
+        // Check if we need to reset the counter (new month)
+        if ($resetAt === null || 
+            $now->month !== $resetAt->month || 
+            $now->year !== $resetAt->year) {
+            return true; // New month, can create bills
         }
-        
+
+        // Check if under the 5 bill limit for current month
         return $this->bills_created_count < 5;
     }
 

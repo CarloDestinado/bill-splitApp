@@ -6,14 +6,38 @@ import './Login.css';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, guestLogin } = useAuth();
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!email || email.trim() === '') {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!password || password.trim() === '') {
+      newErrors.password = 'Password is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setErrors({});
+
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -21,7 +45,13 @@ function Login() {
       navigate('/dashboard');
     } catch (err) {
       const message = err.response?.data?.message || 'Login failed. Please try again.';
-      setError(message);
+      
+      // Check if it's an authentication error
+      if (err.response?.status === 401) {
+        setError('Incorrect email or password. Please try again.');
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -59,25 +89,37 @@ function Login() {
           {error && <div className="error-message">{error}</div>}
 
           <form className="login-form" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              placeholder="Email"
-              className="input-field"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <div className="password-field">
+            <div className="input-group">
               <input
-                type="password"
-                placeholder="Password"
-                className="input-field"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                type="email"
+                placeholder="Email"
+                className={`input-field ${errors.email ? 'input-error' : ''}`}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors({ ...errors, email: '' });
+                }}
                 required
               />
+              {errors.email && <span className="error-text">{errors.email}</span>}
             </div>
-            <a href="#" className="forgot-password">Forgot Password?</a>
+            <div className="input-group">
+              <div className="password-field">
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className={`input-field ${errors.password ? 'input-error' : ''}`}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors({ ...errors, password: '' });
+                  }}
+                  required
+                />
+              </div>
+              {errors.password && <span className="error-text">{errors.password}</span>}
+            </div>
+            <Link to="/forgot-password" className="forgot-password">Forgot Password?</Link>
             <button type="submit" className="login-btn" disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
             </button>

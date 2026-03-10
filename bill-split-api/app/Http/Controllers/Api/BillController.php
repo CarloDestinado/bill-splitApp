@@ -65,7 +65,20 @@ class BillController extends Controller
 
         // Increment bill count for standard users
         if (!$user->isPremium()) {
-            $user->bills_created_count += 1;
+            $now = now();
+            $resetAt = $user->bills_count_reset_at;
+            
+            // Check if we need to reset the counter (new month)
+            if ($resetAt === null || 
+                $now->month !== $resetAt->month || 
+                $now->year !== $resetAt->year) {
+                // Reset counter for new month
+                $user->bills_created_count = 1;
+                $user->bills_count_reset_at = $now;
+            } else {
+                // Increment counter for same month
+                $user->bills_created_count += 1;
+            }
             $user->save();
         }
 

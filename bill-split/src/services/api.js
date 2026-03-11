@@ -40,6 +40,8 @@ export const authAPI = {
   registerGuest: (data) => api.post('/guest/register', data),
   loginGuest: (data) => api.post('/guest/login', data),
   upgradeToRegistered: (data) => api.post('/upgrade-account', data),
+  forgotPassword: (data) => api.post('/forgot-password', data),
+  resetPassword: (data) => api.post('/reset-password', data),
 };
 
 // User APIs

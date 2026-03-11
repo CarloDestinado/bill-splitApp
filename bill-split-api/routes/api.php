@@ -14,6 +14,10 @@ Route::post("/guest/register", [AuthController::class, "registerGuest"]);
 Route::post("/guest/login", [AuthController::class, "loginGuest"]);
 Route::post("/upgrade-account", [AuthController::class, "upgradeToRegistered"])->middleware("auth:sanctum");
 
+// Password reset routes
+Route::post("/forgot-password", [AuthController::class, "forgotPassword"]);
+Route::post("/reset-password", [AuthController::class, "resetPassword"]);
+
 // Guest access - verify invitation code and check email
 Route::post("/verify-invitation", [InvitationController::class, "verifyCode"]);
 Route::post("/guest/check-email", [InvitationController::class, "checkEmail"]);

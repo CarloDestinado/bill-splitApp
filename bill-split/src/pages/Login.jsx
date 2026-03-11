@@ -1,26 +1,27 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './Login.css';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "./Login.css";
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login, guestLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await login(email, password);
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err) {
-      const message = err.response?.data?.message || 'Login failed. Please try again.';
+      const message =
+        err.response?.data?.message || "Login failed. Please try again.";
       setError(message);
     } finally {
       setLoading(false);
@@ -29,14 +30,16 @@ function Login() {
 
   const handleGuestLogin = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await guestLogin(email);
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || 'Guest login failed. Please try again.');
+      setError(
+        err.response?.data?.message || "Guest login failed. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -47,14 +50,20 @@ function Login() {
       <div className="login-container">
         <div className="login-left">
           <div className="illustration">
-            <img src="/images/Illustration.jpg" alt="Bill Split Illustration" className="illustration-img" />
+            <img
+              src="/images/Illustration.jpg"
+              alt="Bill Split Illustration"
+              className="illustration-img"
+            />
             <h3>Make your work easier and organized with Bill Split</h3>
           </div>
         </div>
 
         <div className="login-right">
           <h1>Welcome back!</h1>
-          <p className="subtitle">Simplify your workflow and boost your productivity with Bill Split</p>
+          <p className="subtitle">
+            Simplify your workflow and boost your productivity with Bill Split
+          </p>
 
           {error && <div className="error-message">{error}</div>}
 
@@ -77,9 +86,11 @@ function Login() {
                 required
               />
             </div>
-            <a href="#" className="forgot-password">Forgot Password?</a>
+            <Link to="/forgot-password" className="forgot-password">
+              Forgot Password?
+            </Link>
             <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
@@ -105,7 +116,7 @@ function Login() {
                 required
               />
               <button type="submit" className="guest-btn" disabled={loading}>
-                {loading ? 'Loading...' : 'Continue as Guest'}
+                {loading ? "Loading..." : "Continue as Guest"}
               </button>
             </form>
           </div>

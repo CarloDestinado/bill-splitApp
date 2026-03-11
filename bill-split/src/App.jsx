@@ -1,15 +1,22 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 // Pages
-import Login from './pages/Login';
-import Register from './pages/Register';
-import GuestRegister from './pages/GuestRegister';
-import GuestBillSearch from './pages/GuestBillSearch';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import Upgrade from './pages/Upgrade';
-import BillDetail from './pages/BillDetail';
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import GuestRegister from "./pages/GuestRegister";
+import GuestBillSearch from "./pages/GuestBillSearch";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import Upgrade from "./pages/Upgrade";
+import BillDetail from "./pages/BillDetail";
+import ForgotPass from "./pages/ForgotPass";
+import ChangePass from "./pages/ChangePass";
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -112,9 +119,25 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPass />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/change-password/:token"
+          element={
+            <PublicRoute>
+              <ChangePass />
+            </PublicRoute>
+          }
+        />
 
         {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>

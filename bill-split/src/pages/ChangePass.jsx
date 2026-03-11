@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { authAPI } from '../services/api';
-import './ChangePass.css';
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { authAPI } from "../services/api";
+import "./ChangePass.css";
 
 function ChangePass() {
   const { token } = useParams(); // Get token from URL
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
-    password: '',
-    password_confirmation: '',
+    password: "",
+    password_confirmation: "",
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -24,46 +24,48 @@ function ChangePass() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     // Validate passwords match
     if (formData.password !== formData.password_confirmation) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     // Validate password length
     if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters long.');
+      setError("Password must be at least 8 characters long.");
       return;
     }
 
     if (formData.password.length > 16) {
-      setError('Password cannot be more than 16 characters long.');
+      setError("Password cannot be more than 16 characters long.");
       return;
     }
 
     // Validate password contains at least one uppercase letter
     if (!/[A-Z]/.test(formData.password)) {
-      setError('Password must contain at least one uppercase letter.');
+      setError("Password must contain at least one uppercase letter.");
       return;
     }
 
     // Validate password contains at least one lowercase letter
     if (!/[a-z]/.test(formData.password)) {
-      setError('Password must contain at least one lowercase letter.');
+      setError("Password must contain at least one lowercase letter.");
       return;
     }
 
     // Validate password contains at least one number
     if (!/\d/.test(formData.password)) {
-      setError('Password must contain at least one number.');
+      setError("Password must contain at least one number.");
       return;
     }
 
     // Validate password contains at least one special character
     if (!/[@₱!%*?&#]/.test(formData.password)) {
-      setError('Password must contain at least one special character (@₱!%*?&#).');
+      setError(
+        "Password must contain at least one special character (@₱!%*?&#).",
+      );
       return;
     }
 
@@ -77,20 +79,22 @@ function ChangePass() {
         password_confirmation: formData.password_confirmation,
       });
 
-      setSuccess('Password reset successful! Redirecting to login...');
-      
+      setSuccess("Success! Redirecting to login...");
+
       // Redirect to login after 2 seconds
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 2000);
-
     } catch (err) {
       const errors = err.response?.data?.errors;
       if (errors) {
         const firstError = Object.values(errors)[0];
         setError(Array.isArray(firstError) ? firstError[0] : firstError);
       } else {
-        setError(err.response?.data?.message || 'Failed to reset password. Token may be expired.');
+        setError(
+          err.response?.data?.message ||
+            "Failed to reset password. Token may be expired.",
+        );
       }
     } finally {
       setLoading(false);
@@ -102,7 +106,11 @@ function ChangePass() {
       <div className="changepass-container">
         <div className="changepass-left">
           <div className="illustration">
-            <img src="/images/Illustration.jpg" alt="Bill Split Illustration" className="illustration-img" />
+            <img
+              src="/images/Illustration.jpg"
+              alt="Bill Split Illustration"
+              className="illustration-img"
+            />
             <h3>Make your work easier and organized with Bill Split</h3>
           </div>
         </div>
@@ -134,7 +142,7 @@ function ChangePass() {
               required
             />
             <button type="submit" className="changepass-btn" disabled={loading}>
-              {loading ? 'Resetting Password...' : 'Reset Password'}
+              {loading ? "Resetting Password..." : "Reset Password"}
             </button>
           </form>
 

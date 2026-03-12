@@ -8,7 +8,7 @@
 
 /* Background decoration */
 .bill-detail::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -147,9 +147,15 @@
   border-radius: var(--radius-lg);
   font-weight: 700;
   color: var(--primary-700);
-  font-family: 'SF Mono', Monaco, monospace;
+  font-family: "SF Mono", Monaco, monospace;
   letter-spacing: 0.05em;
   margin-left: 0.5rem;
+}
+
+.action-btn-container {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: space-between;
 }
 
 .users-card {
@@ -172,7 +178,7 @@
 }
 
 .users-card h2::before {
-  content: '';
+  content: "";
   width: 4px;
   height: 24px;
   background: var(--gradient-primary);
@@ -226,7 +232,7 @@
   color: var(--primary-600);
   font-weight: 700;
   font-size: 1.125rem;
-  font-family: 'SF Mono', Monaco, monospace;
+  font-family: "SF Mono", Monaco, monospace;
 }
 
 .no-users {

@@ -1,11 +1,20 @@
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { authAPI } from "../services/api";
 import "./ChangePass.css";
 
 function ChangePass() {
-  const { token } = useParams(); // Get token from URL
+  const location = useLocation();
   const navigate = useNavigate();
+  
+  // Get email and nickname from previous page
+  const { email, nickname } = location.state || {};
+  
+  // Redirect back if no data provided
+  if (!email || !nickname) {
+    navigate("/forgot-password");
+    return null;
+  }
 
   const [formData, setFormData] = useState({
     password: "",
@@ -72,9 +81,10 @@ function ChangePass() {
     setLoading(true);
 
     try {
-      // Call backend to reset password
+      // Call backend to reset password with nickname and email
       await authAPI.resetPassword({
-        token,
+        nickname,
+        email,
         password: formData.password,
         password_confirmation: formData.password_confirmation,
       });
@@ -93,7 +103,7 @@ function ChangePass() {
       } else {
         setError(
           err.response?.data?.message ||
-            "Failed to reset password. Token may be expired.",
+            "Failed to reset password. Please try again.",
         );
       }
     } finally {

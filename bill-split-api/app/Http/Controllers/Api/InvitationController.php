@@ -23,29 +23,42 @@ class InvitationController extends Controller
         $bill = Bill::where('invitation_code', strtoupper($request->invitation_code))
             ->first();
 
-        if (!$bill) {
-            // If not found in bills, check invitations table
-            $invitation = Invitation::where('invitation_code', strtoupper($request->invitation_code))
-                ->where('status', 'pending')
-                ->first();
-
-            if (!$invitation) {
-                return response()->json([
-                    'valid' => false,
-                    'message' => 'Invalid or expired invitation code',
-                ], 404);
-            }
-
-            if ($invitation->isExpired()) {
-                $invitation->update(['status' => 'expired']);
-                return response()->json([
-                    'valid' => false,
-                    'message' => 'Invitation code has expired',
-                ], 400);
-            }
-
-            $bill = $invitation->bill;
+        if ($bill) {
+            // Bill found - this is a direct bill invitation code
+            return response()->json([
+                'valid' => true,
+                'bill' => [
+                    'id' => $bill->id,
+                    'title' => $bill->title,
+                    'total_amount' => $bill->total_amount,
+                    'description' => $bill->description ?? '',
+                    'status' => $bill->status ?? 'active',
+                    'invitation_code' => $bill->invitation_code,
+                ],
+            ]);
         }
+
+        // If not found in bills, check invitations table
+        $invitation = Invitation::where('invitation_code', strtoupper($request->invitation_code))
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$invitation) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Invalid or expired invitation code',
+            ], 404);
+        }
+
+        if ($invitation->isExpired()) {
+            $invitation->update(['status' => 'expired']);
+            return response()->json([
+                'valid' => false,
+                'message' => 'Invitation code has expired',
+            ], 400);
+        }
+
+        $bill = $invitation->bill;
 
         return response()->json([
             'valid' => true,
@@ -53,8 +66,8 @@ class InvitationController extends Controller
                 'id' => $bill->id,
                 'title' => $bill->title,
                 'total_amount' => $bill->total_amount,
-                'description' => $bill->description,
-                'status' => $bill->status,
+                'description' => $bill->description ?? '',
+                'status' => $bill->status ?? 'active',
                 'invitation_code' => $bill->invitation_code,
             ],
         ]);

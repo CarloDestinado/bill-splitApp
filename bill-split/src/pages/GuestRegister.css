@@ -246,6 +246,20 @@
   border: 1px solid #fed7aa;
 }
 
+.upgrade-hint {
+  font-size: 0.85rem;
+  color: var(--primary-700);
+  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-lg);
+  margin: 1rem 0 0 0;
+  border: 1px solid var(--primary-200);
+}
+
+.upgrade-hint strong {
+  color: var(--primary-800);
+}
+
 .loading {
   text-align: center;
   padding: 3rem;

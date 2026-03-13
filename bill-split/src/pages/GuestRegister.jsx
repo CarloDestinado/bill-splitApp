@@ -1,30 +1,34 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { invitationAPI } from '../services/api';
 import './GuestRegister.css';
 
 function GuestRegister() {
   const { code } = useParams();
-  const [searchParams] = useSearchParams();
-  const prefillEmail = searchParams.get('email') || '';
-
   const navigate = useNavigate();
   const { guestRegister } = useAuth();
 
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
-    email: prefillEmail,
+    email: '',
   });
-  const [invitation, setInvitation] = useState(null);
   const [bill, setBill] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(true);
 
   useEffect(() => {
-    verifyInvitation();
+    // Load bill data from sessionStorage
+    const guestBillData = sessionStorage.getItem('guestBillData');
+    if (guestBillData) {
+      setBill(JSON.parse(guestBillData));
+      setVerifying(false);
+    } else {
+      // If no session data, verify the code
+      verifyInvitation();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
@@ -32,8 +36,8 @@ function GuestRegister() {
     try {
       const response = await invitationAPI.verifyCode({ invitation_code: code.toUpperCase() });
       if (response.data.valid) {
-        setInvitation(response.data.invitation);
         setBill(response.data.bill);
+        sessionStorage.setItem('guestBillData', JSON.stringify(response.data.bill));
       } else {
         setError('Invalid or expired invitation code');
       }
@@ -53,11 +57,6 @@ function GuestRegister() {
       // Register as guest
       await guestRegister(formData);
 
-      // Accept the invitation
-      if (invitation) {
-        await invitationAPI.accept(invitation.id);
-      }
-
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
@@ -70,7 +69,7 @@ function GuestRegister() {
     return <div className="guest-register-page"><div className="loading">Verifying invitation...</div></div>;
   }
 
-  if (error && !invitation) {
+  if (error && !bill) {
     return (
       <div className="guest-register-page">
         <div className="error-container">
@@ -130,9 +129,8 @@ function GuestRegister() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                disabled
               />
-              <p className="field-help">This email was invited to the bill</p>
+              <p className="field-help">Enter your email to access the bill</p>
             </div>
 
             <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
@@ -146,6 +144,9 @@ function GuestRegister() {
             </p>
             <p>
               Already have an account? <Link to="/login">Login here</Link>
+            </p>
+            <p className="upgrade-hint">
+              💡 <strong>Tip:</strong> After creating your account, you can upgrade to Registered anytime by setting a password in your Profile.
             </p>
           </div>
         </div>

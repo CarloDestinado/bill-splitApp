@@ -17,8 +17,8 @@ function GuestBillSearch() {
     try {
       const response = await invitationAPI.verifyCode({ invitation_code: code.toUpperCase() });
       if (response.data.valid) {
-        sessionStorage.setItem('guestBillData', JSON.stringify(response.data.bill));
-        navigate(`/guest/register/${code.toUpperCase()}`);
+        // Redirect to the new unified guest login flow
+        navigate(`/guest/login?code=${code.toUpperCase()}`);
       } else {
         setError(response.data.message || 'Invalid invitation code');
       }

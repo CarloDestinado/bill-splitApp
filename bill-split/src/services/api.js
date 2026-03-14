@@ -37,9 +37,11 @@ export const authAPI = {
   register: (data) => api.post('/register', data),
   login: (data) => api.post('/login', data),
   logout: () => api.post('/logout'),
-  registerGuest: (data) => api.post('/guest/register', data),
+  registerGuest: (data) => api.post('/guest/register-with-code', data),
   loginGuest: (data) => api.post('/guest/login', data),
   upgradeToRegistered: (data) => api.post('/upgrade-account', data),
+  forgotPassword: (data) => api.post('/forgot-password', data),
+  resetPassword: (data) => api.post('/reset-password', data),
 };
 
 // User APIs

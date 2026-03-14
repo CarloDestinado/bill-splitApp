@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\InvitationController;
 Route::post("/register", [AuthController::class, "register"]);
 Route::post("/login", [AuthController::class, "login"]);
 Route::post("/guest/register", [AuthController::class, "registerGuest"]);
+Route::post("/guest/register-with-code", [AuthController::class, "registerGuestWithCode"]);
 Route::post("/guest/login", [AuthController::class, "loginGuest"]);
 Route::post("/upgrade-account", [AuthController::class, "upgradeToRegistered"])->middleware("auth:sanctum");
 Route::post("/forgot-password", [AuthController::class, "forgotPassword"]);

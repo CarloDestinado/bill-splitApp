@@ -90,7 +90,34 @@ class BillController extends Controller
 
     public function show(Request $request, $id)
     {
+        $user = $request->user();
         $bill = Bill::with(['creator', 'users', 'invitations'])->findOrFail($id);
+
+        // Track guest access hours
+        if ($user->isGuest()) {
+            $now = now();
+            $accessResetAt = $user->access_reset_at;
+
+            // Check if we need to reset the daily counter (24 hours have passed)
+            if ($accessResetAt === null || $now->diffInHours($accessResetAt) >= 24) {
+                // Reset counter
+                $user->access_hours_used = 1;
+                $user->access_reset_at = $now;
+            } else {
+                // Increment access hours
+                $user->access_hours_used += 1;
+            }
+            $user->last_access_time = $now;
+            $user->save();
+
+            // Check if guest has exceeded access limit
+            if ($user->access_hours_used > 6) {
+                return response()->json([
+                    'message' => 'Guest access limit reached (6 hours/day). Please upgrade to registered account.',
+                    'access_limit_reached' => true,
+                ], 403);
+            }
+        }
 
         return response()->json([
             'bill' => $bill,

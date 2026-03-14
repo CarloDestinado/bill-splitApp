@@ -122,6 +122,72 @@ class AuthController extends Controller
         ], 201);
     }
 
+    public function registerGuestWithCode(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users',
+            'nickname' => 'required|string|max:255|unique:users,nickname',
+            'invitation_code' => 'required|string',
+        ], [
+            'nickname.unique' => 'This nickname has already been taken.',
+        ]);
+
+        // Verify the invitation code first
+        $bill = \App\Models\Bill::where('invitation_code', strtoupper($request->invitation_code))
+            ->first();
+
+        if (!$bill) {
+            throw ValidationException::withMessages([
+                'invitation_code' => ['Invalid invitation code. Please check the code and try again.'],
+            ]);
+        }
+
+        // Generate unique username from email
+        $emailPrefix = explode('@', $request->email)[0];
+        $uniqueSuffix = time() . rand(1000, 9999);
+        $username = $emailPrefix . '_' . $uniqueSuffix;
+
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'nickname' => $request->nickname,
+            'username' => $username,
+            'email' => $request->email,
+            'user_type' => 'guest',
+            'account_type' => 'standard',
+            'access_reset_at' => now(),
+            'access_hours_used' => 0,
+        ]);
+
+        // Add the guest user to the bill
+        $currentUsers = $bill->users()->count();
+        $totalUsers = $currentUsers + 1;
+        $shareAmount = $bill->total_amount / $totalUsers;
+
+        \App\Models\BillUser::create([
+            'bill_id' => $bill->id,
+            'user_id' => $user->id,
+            'share_amount' => $shareAmount,
+            'payment_status' => 'pending',
+        ]);
+
+        // Recalculate share amounts for all users
+        foreach ($bill->billUsers as $billUser) {
+            $billUser->update(['share_amount' => $shareAmount]);
+        }
+
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Guest registered successfully and added to bill',
+            'user' => $user,
+            'token' => $token,
+            'bill' => $bill,
+        ], 201);
+    }
+
     public function loginGuest(Request $request)
     {
         $request->validate([
@@ -212,50 +278,39 @@ class AuthController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'token' => 'required|string',
+            'nickname' => 'required|string',
+            'email' => 'required|email',
             'password' => [
                 'required',
                 'string',
                 'min:8',
                 'max:16',
                 'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@₱!%*?&#])[A-Za-z\d@₱!%*?&#]+$/',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,16}$/',
             ],
         ], [
-            'email.exists' => 'No account found with this email address.',
+            'nickname.required' => 'Nickname is required.',
+            'email.required' => 'Email is required.',
             'password.min' => 'Password must be at least 8 characters long.',
             'password.max' => 'Password cannot be more than 16 characters long.',
             'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
             'password.confirmed' => 'Password confirmation does not match.',
         ]);
 
-        // Verify token
-        $tokenRecord = \DB::table('password_reset_tokens')
-            ->where('email', $request->email)
-            ->where('token', hash('sha256', $request->token))
-            ->first();
+        // Find user with matching nickname AND email
+        $user = User::where('nickname', $request->nickname)
+                    ->where('email', $request->email)
+                    ->first();
 
-        if (!$tokenRecord) {
+        if (!$user) {
             throw ValidationException::withMessages([
-                'token' => ['Invalid or expired reset token.'],
-            ]);
-        }
-
-        // Check if token is expired (1 hour)
-        if (now()->diffInMinutes($tokenRecord->created_at) > 60) {
-            throw ValidationException::withMessages([
-                'token' => ['Reset token has expired. Please request a new one.'],
+                'email' => ['No account found with this nickname and email combination.'],
             ]);
         }
 
         // Update password
-        $user = User::where('email', $request->email)->first();
         $user->password = Hash::make($request->password);
         $user->save();
-
-        // Delete used token
-        \DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         return response()->json([
             'message' => 'Password reset successfully.',

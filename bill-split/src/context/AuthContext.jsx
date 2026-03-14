@@ -23,7 +23,17 @@ const AuthProvider = ({ children }) => {
       setUser(response.data.user);
     } catch (error) {
       console.error('Failed to load user:', error);
-      logout();
+      // Handle guest access limit error
+      if (error.response?.status === 403 && error.response?.data?.access_limit_reached) {
+        // Keep user data but mark access as limited
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser) {
+          storedUser.access_limit_reached = true;
+          setUser(storedUser);
+        }
+      } else {
+        logout();
+      }
     } finally {
       setLoading(false);
     }
@@ -37,6 +47,17 @@ const AuthProvider = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  // Refresh user data (call this after guest accesses a bill)
+  const refreshUser = async () => {
+    try {
+      const response = await userAPI.getProfile();
+      setUser(response.data.user);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+    } catch (error) {
+      console.error('Failed to refresh user:', error);
+    }
+  };
 
   const login = async (email, password) => {
     const response = await authAPI.login({ email, password });
@@ -60,7 +81,7 @@ const AuthProvider = ({ children }) => {
 
   const guestRegister = async (userData) => {
     const response = await authAPI.registerGuest(userData);
-    const { user, token } = response.data;
+    const { user, token, bill } = response.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
     setToken(token);
@@ -110,6 +131,7 @@ const AuthProvider = ({ children }) => {
     logout,
     upgradeToRegistered,
     updateUser,
+    refreshUser,
     isGuest: user?.user_type === 'guest',
     isPremium: user?.account_type === 'premium',
     isStandard: user?.account_type === 'standard',

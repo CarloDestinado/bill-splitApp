@@ -6,10 +6,13 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import GuestRegister from './pages/GuestRegister';
 import GuestBillSearch from './pages/GuestBillSearch';
+import GuestLogin from './pages/GuestLogin';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Upgrade from './pages/Upgrade';
 import BillDetail from './pages/BillDetail';
+import ForgotPass from './pages/ForgotPass';
+import ChangePass from './pages/ChangePass';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -71,6 +74,14 @@ function AppRoutes() {
           }
         />
         <Route
+          path="/guest/login"
+          element={
+            <PublicRoute>
+              <GuestLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
           path="/guest/register/:code"
           element={
             <PublicRoute>
@@ -110,6 +121,22 @@ function AppRoutes() {
             <ProtectedRoute>
               <BillDetail />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPass />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/change-password/:token"
+          element={
+            <PublicRoute>
+              <ChangePass />
+            </PublicRoute>
           }
         />
 

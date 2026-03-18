@@ -61,7 +61,9 @@ function Dashboard() {
   const loadBills = async () => {
     try {
       const response = await billAPI.getAll();
-      setBills(response.data.bills);
+      // Filter out completed (Done/Paid) bills
+      const activeBills = response.data.bills.filter(bill => bill.status !== 'completed');
+      setBills(activeBills);
     } catch (error) {
       console.error("Failed to load bills:", error);
     } finally {
@@ -285,6 +287,7 @@ function CreateBillModal({ onClose, onCreated }) {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
+              placeholder="Enter bill title"
               required
             />
           </div>
@@ -298,6 +301,7 @@ function CreateBillModal({ onClose, onCreated }) {
               onChange={(e) =>
                 setFormData({ ...formData, total_amount: e.target.value })
               }
+              placeholder="Enter total amount"
               required
             />
           </div>
@@ -310,17 +314,6 @@ function CreateBillModal({ onClose, onCreated }) {
                 setFormData({ ...formData, description: e.target.value })
               }
               rows="3"
-            />
-          </div>
-          <div className="form-group">
-            <label>Due Date (optional)</label>
-            <input
-              type="date"
-              className="input-field"
-              value={formData.due_date}
-              onChange={(e) =>
-                setFormData({ ...formData, due_date: e.target.value })
-              }
             />
           </div>
           <div className="modal-actions">

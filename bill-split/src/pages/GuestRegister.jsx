@@ -106,6 +106,7 @@ function GuestRegister() {
                   className="input-field"
                   value={formData.first_name}
                   onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                  placeholder="First Name"
                   required
                 />
               </div>
@@ -116,6 +117,7 @@ function GuestRegister() {
                   className="input-field"
                   value={formData.last_name}
                   onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                  placeholder="Last Name"
                   required
                 />
               </div>
@@ -128,6 +130,7 @@ function GuestRegister() {
                 className="input-field"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="Email Address"
                 required
               />
               <p className="field-help">Enter your email to access the bill</p>

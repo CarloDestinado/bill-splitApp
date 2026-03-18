@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import './Register.css';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "./Register.css";
 
 function Register() {
   const [formData, setFormData] = useState({
-    last_name: '',
-    first_name: '',
-    nickname: '',
-    email: '',
-    username: '',
-    password: '',
-    password_confirmation: '',
+    last_name: "",
+    first_name: "",
+    nickname: "",
+    email: "",
+    username: "",
+    password: "",
+    password_confirmation: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -27,20 +27,20 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (formData.password !== formData.password_confirmation) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
-    if (formData.last_name.includes(' ')) {
-      setError('Last name cannot contain spaces');
+    if (formData.last_name.includes(" ")) {
+      setError("Last name cannot contain spaces");
       return;
     }
 
-    if (formData.first_name.includes(' ')) {
-      setError('First name cannot contain spaces');
+    if (formData.first_name.includes(" ")) {
+      setError("First name cannot contain spaces");
       return;
     }
 
@@ -48,14 +48,17 @@ function Register() {
 
     try {
       await register(formData);
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
       const errors = err.response?.data?.errors;
       if (errors) {
         const firstError = Object.values(errors)[0];
         setError(Array.isArray(firstError) ? firstError[0] : firstError);
       } else {
-        setError(err.response?.data?.message || 'Registration failed. Please try again.');
+        setError(
+          err.response?.data?.message ||
+            "Registration failed. Please try again.",
+        );
       }
     } finally {
       setLoading(false);
@@ -67,14 +70,20 @@ function Register() {
       <div className="register-container">
         <div className="register-left">
           <div className="illustration">
-            <img src="/images/Illustration.jpg" alt="Bill Split Illustration" className="illustration-img" />
+            <img
+              src="/images/Illustration.jpg"
+              alt="Bill Split Illustration"
+              className="illustration-img"
+            />
             <h3>Make your work easier and organized with Bill Split</h3>
           </div>
         </div>
 
         <div className="register-right">
           <h1>Create Account</h1>
-          <p className="subtitle">Join Bill Split and simplify your bill management</p>
+          <p className="subtitle">
+            Join Bill Split and simplify your bill management
+          </p>
 
           {error && <div className="error-message">{error}</div>}
 
@@ -145,15 +154,15 @@ function Register() {
               required
             />
             <button type="submit" className="register-btn" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Register'}
+              {loading ? "Creating Account..." : "Register"}
             </button>
           </form>
 
           <p className="divider">or</p>
 
-          <Link to="/guest-register" className="guest-link">
+          {/* <Link to="/guest-register" className="guest-link">
             Continue as Guest (Limited Access)
-          </Link>
+          </Link> */}
 
           <p className="login-text">
             Already have an account? <Link to="/login">Login here</Link>

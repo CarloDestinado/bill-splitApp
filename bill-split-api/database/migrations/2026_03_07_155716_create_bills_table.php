@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('title');
             $table->decimal('total_amount', 10, 2);
             $table->string('invitation_code', 20)->unique();
-            $table->enum('status', ['active', 'completed', 'cancelled'])->default('active');
+            $table->enum('status', ['active', 'completed', 'cancelled', 'archived'])->default('active');
             $table->date('due_date')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();

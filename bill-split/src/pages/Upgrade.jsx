@@ -95,6 +95,7 @@ function Upgrade() {
                     className="input-field"
                     value={passwordData.password}
                     onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                    placeholder="Password (min 8 characters)"
                     required
                     minLength="8"
                   />
@@ -106,6 +107,7 @@ function Upgrade() {
                     className="input-field"
                     value={passwordData.password_confirmation}
                     onChange={(e) => setPasswordData({ ...passwordData, password_confirmation: e.target.value })}
+                    placeholder="Confirm Password"
                     required
                     minLength="8"
                   />

@@ -153,6 +153,12 @@
   margin-left: 0.5rem;
 }
 
+.action-btn-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-around;
+}
+
 .users-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
@@ -427,4 +433,33 @@
     font-size: 0.8rem;
     padding: 0.4rem 0.875rem;
   }
+}
+
+/* Done/Paid Button Styles */
+.btn-archive {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  display: none;
+}
+
+.btn-archive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-archive:active {
+  transform: translateY(0);
+}
+
+/* Completed Status Badge */
+.status.completed {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: #065f46;
 }

@@ -140,7 +140,7 @@ class BillController extends Controller
             'total_amount' => 'sometimes|numeric|min:0',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
-            'status' => 'sometimes|in:active,completed,cancelled',
+            'status' => 'sometimes|in:active,completed,cancelled,archived',
         ]);
 
         $bill->update($request->only(['title', 'total_amount', 'description', 'due_date', 'status']));

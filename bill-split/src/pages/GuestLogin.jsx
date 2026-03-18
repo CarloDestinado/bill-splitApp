@@ -187,6 +187,7 @@ function GuestLogin() {
                       className="input-field"
                       value={formData.first_name}
                       onChange={handleInputChange}
+                      placeholder="First Name"
                       required
                       disabled={loading}
                     />
@@ -199,6 +200,7 @@ function GuestLogin() {
                       className="input-field"
                       value={formData.last_name}
                       onChange={handleInputChange}
+                      placeholder="Last Name"
                       required
                       disabled={loading}
                     />
@@ -213,6 +215,7 @@ function GuestLogin() {
                     className="input-field"
                     value={formData.email}
                     onChange={handleInputChange}
+                    placeholder="Email Address"
                     required
                     disabled={loading}
                   />

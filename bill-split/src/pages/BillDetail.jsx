@@ -18,7 +18,7 @@ function BillDetail() {
     try {
       const response = await billAPI.getById(id);
       setBill(response.data.bill);
-      
+
       // Track guest access time
       if (isGuest) {
         trackGuestAccess();
@@ -65,12 +65,9 @@ function BillDetail() {
 
     try {
       await billAPI.delete(id);
-      alert("Bill deleted successfully!");
       navigate("/dashboard");
     } catch (err) {
-      const message =
-        err.response?.data?.message || "Failed to delete bill. Please try again.";
-      alert(message);
+      setError(err.response?.data?.message || "Failed to delete bill. Please try again.");
     }
   };
 
@@ -79,11 +76,27 @@ function BillDetail() {
       const response = await billAPI.update(id, updatedData);
       setBill(response.data.bill);
       setShowEditModal(false);
-      alert("Bill updated successfully!");
     } catch (err) {
-      const message =
-        err.response?.data?.message || "Failed to update bill. Please try again.";
-      alert(message);
+      setError(err.response?.data?.message || "Failed to update bill. Please try again.");
+    }
+  };
+
+  const handleArchive = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to ${bill.status === 'completed' ? 'mark as active' : 'mark as Done/Paid'} "${bill.title}"?`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const newStatus = bill.status === 'completed' ? 'active' : 'completed';
+      const response = await billAPI.update(id, { status: newStatus });
+      setBill(response.data.bill);
+      if (newStatus === 'completed') {
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to update bill. Please try again.");
     }
   };
 
@@ -154,6 +167,8 @@ function BillDetail() {
       </div>
 
       <div className="bill-detail-content">
+        {error && <div className="error-message">{error}</div>}
+        
         {/* Guest Access Notice */}
         {isGuest && (
           <>
@@ -185,11 +200,14 @@ function BillDetail() {
             Invitation Code: <code>{bill.invitation_code}</code>
           </p>
 
-          {/* Edit/Delete buttons - Only for creator */}
+          {/* Edit/Delete/Done buttons - Only for creator */}
           {isCreator && !isGuest ? (
             <div className="action-btn-container">
               <button className="btn btn-primary" onClick={() => setShowEditModal(true)}>
                 Edit Bill
+              </button>
+              <button className="btn btn-archive" onClick={handleArchive}>
+                {bill.status === 'completed' ? 'Mark as Active' : 'Done/Paid'}
               </button>
               <button className="btn btn-danger" onClick={handleDelete}>
                 Delete Bill
@@ -304,6 +322,7 @@ function EditBillModal({ bill, onClose, onUpdate }) {
               className="input-field"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="Enter bill title"
               required
             />
           </div>
@@ -315,6 +334,7 @@ function EditBillModal({ bill, onClose, onUpdate }) {
               className="input-field"
               value={formData.total_amount}
               onChange={(e) => setFormData({ ...formData, total_amount: e.target.value })}
+              placeholder="Enter total amount"
               required
             />
           </div>
@@ -326,27 +346,6 @@ function EditBillModal({ bill, onClose, onUpdate }) {
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows="3"
             />
-          </div>
-          <div className="form-group">
-            <label>Due Date (optional)</label>
-            <input
-              type="date"
-              className="input-field"
-              value={formData.due_date}
-              onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Status</label>
-            <select
-              className="input-field"
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-            >
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
           </div>
           <div className="modal-actions">
             <button type="button" className="btn btn-secondary" onClick={onClose}>

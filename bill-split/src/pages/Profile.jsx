@@ -96,7 +96,7 @@ function Profile() {
 
           {isGuest && (
             <div className="upgrade-guest-section">
-              <h3>Upgrade to Registered User</h3>
+              <h3>Upgrade to Standard Account</h3>
               <p>Get full access to all features by setting a password</p>
               <button
                 className="btn btn-primary"
@@ -156,7 +156,7 @@ function Profile() {
 
         {showPasswordForm && isGuest && (
           <div className="profile-card">
-            <h2>Upgrade to Registered User</h2>
+            <h2>Upgrade to Standard Account</h2>
             <p className="upgrade-description">
               Set a password to upgrade your account. Your existing information (name and email) will be kept.
             </p>
@@ -186,7 +186,7 @@ function Profile() {
                 />
               </div>
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Upgrading...' : 'Upgrade to Registered'}
+                {loading ? 'Upgrading...' : 'Upgrade to Standard'}
               </button>
             </form>
           </div>

@@ -154,16 +154,20 @@ function checkGuestAccessLimit(user) {
   const now = new Date();
   const accessResetAt = user.access_reset_at ? new Date(user.access_reset_at) : null;
 
-  // Check if we need to reset the daily counter
-  if (accessResetAt) {
-    const hoursSinceReset = (now - accessResetAt) / (1000 * 60 * 60);
-    if (hoursSinceReset >= 24) {
-      return true; // Reset after 24 hours
-    }
+  // No baseline set yet, allow access
+  if (!accessResetAt) {
+    return true;
   }
 
-  // Check if user has remaining hours
-  return (user.access_hours_used || 0) < 6;
+  const hoursSinceReset = (now - accessResetAt) / (1000 * 60 * 60);
+  
+  // Reset after 24 hours
+  if (hoursSinceReset >= 24) {
+    return true;
+  }
+
+  // Check if user has remaining hours (based on actual time elapsed)
+  return hoursSinceReset < 6;
 }
 
 // Get remaining access hours for guest
@@ -175,15 +179,19 @@ function getRemainingAccessHours(user) {
   const now = new Date();
   const accessResetAt = user.access_reset_at ? new Date(user.access_reset_at) : null;
 
-  // Check if we need to reset the daily counter
-  if (accessResetAt) {
-    const hoursSinceReset = (now - accessResetAt) / (1000 * 60 * 60);
-    if (hoursSinceReset >= 24) {
-      return 6; // Reset after 24 hours
-    }
+  // Check if we need to reset the daily counter (24 hours have passed)
+  if (!accessResetAt) {
+    return 6; // No baseline set yet, full 6 hours available
   }
 
-  return Math.max(0, 6 - (user.access_hours_used || 0));
+  const hoursSinceReset = (now - accessResetAt) / (1000 * 60 * 60);
+  
+  if (hoursSinceReset >= 24) {
+    return 6; // Reset after 24 hours
+  }
+
+  // Calculate remaining hours based on actual time elapsed
+  return Math.max(0, 6 - hoursSinceReset);
 }
 
 // Check if user can create a new bill (5 bills/month for standard, unlimited for premium)

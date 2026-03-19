@@ -19,10 +19,8 @@ function BillDetail() {
       const response = await billAPI.getById(id);
       setBill(response.data.bill);
 
-      // Track guest access time
+      // Refresh user data to get updated access hours
       if (isGuest) {
-        trackGuestAccess();
-        // Refresh user data to get updated access hours
         await refreshUser();
       }
     } catch (err) {
@@ -35,23 +33,6 @@ function BillDetail() {
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Track guest access time
-  const trackGuestAccess = () => {
-    const lastAccessTime = sessionStorage.getItem('guestLastAccessTime');
-    const now = Date.now();
-    
-    if (!lastAccessTime) {
-      sessionStorage.setItem('guestLastAccessTime', now.toString());
-    } else {
-      const elapsedHours = (now - parseInt(lastAccessTime)) / (1000 * 60 * 60);
-      
-      // Check if 24 hours have passed, reset the timer
-      if (elapsedHours >= 24) {
-        sessionStorage.setItem('guestLastAccessTime', now.toString());
-      }
     }
   };
 
@@ -127,10 +108,10 @@ function BillDetail() {
               You've used your 6 hours of guest access for today
             </h2>
             <p style={{ color: 'var(--slate-600)', marginBottom: '1.5rem' }}>
-              Come back tomorrow or upgrade to a registered account for unlimited access.
+              Come back tomorrow or upgrade to a standard account for unlimited access.
             </p>
             <div className="guest-upgrade-prompt">
-              <h3>Upgrade to Registered Account</h3>
+              <h3>Upgrade to Standard Account</h3>
               <p>Get unlimited access to all features by setting a password</p>
               <Link to="/upgrade">
                 <button className="btn btn-primary">Upgrade Now</button>
@@ -174,9 +155,9 @@ function BillDetail() {
           <>
             <div className="guest-access-notice">
               <p>
-                ⚠️ You are viewing this bill as a <strong>Guest User</strong>. 
+                ⚠️ You are viewing this bill as a <strong>Guest User</strong>.
                 <span className="time-remaining-badge">
-                  {remainingAccessHours === Infinity ? 'Unlimited' : `${remainingAccessHours}h`} remaining today
+                  {remainingAccessHours === Infinity ? 'Unlimited' : `${Math.floor(remainingAccessHours)}h`} remaining today
                 </span>
               </p>
             </div>
@@ -213,14 +194,6 @@ function BillDetail() {
                 Delete Bill
               </button>
             </div>
-          ) : isGuest ? (
-            <div className="guest-upgrade-prompt">
-              <h3>Want to edit this bill?</h3>
-              <p>Upgrade to a registered account to create and edit bills</p>
-              <Link to="/upgrade">
-                <button className="btn btn-primary">Upgrade to Registered</button>
-              </Link>
-            </div>
           ) : null}
         </div>
 
@@ -253,9 +226,9 @@ function BillDetail() {
         {/* Guest Upgrade Prompt at bottom */}
         {isGuest && (
           <div className="guest-upgrade-prompt">
-            <h3>Upgrade to Registered Account</h3>
+            <h3>Upgrade to Standard Account</h3>
             <p>
-              Guest access is limited to 6 hours per day. Upgrade to a registered account for:
+              Guest access is limited to 6 hours per day. Upgrade to a standard account for:
             </p>
             <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '1rem auto', color: 'var(--slate-700)' }}>
               <li>✓ Unlimited access to bills</li>

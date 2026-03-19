@@ -316,7 +316,7 @@ function GuestLogin() {
               <li>Cannot edit bill details</li>
             </ul>
             <p className="upgrade-hint">
-              <strong>Tip:</strong> You can upgrade to a registered account
+              <strong>Tip:</strong> You can upgrade to a standard account
               anytime for unlimited access!
             </p>
           </div>

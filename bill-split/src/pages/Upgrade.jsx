@@ -45,12 +45,47 @@ function Upgrade() {
       return;
     }
 
+    // Validate password length
+    if (passwordData.password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
+    if (passwordData.password.length > 16) {
+      setError('Password cannot be more than 16 characters long.');
+      return;
+    }
+
+    // Validate password contains at least one uppercase letter
+    if (!/[A-Z]/.test(passwordData.password)) {
+      setError('Password must contain at least one uppercase letter.');
+      return;
+    }
+
+    // Validate password contains at least one lowercase letter
+    if (!/[a-z]/.test(passwordData.password)) {
+      setError('Password must contain at least one lowercase letter.');
+      return;
+    }
+
+    // Validate password contains at least one number
+    if (!/\d/.test(passwordData.password)) {
+      setError('Password must contain at least one number.');
+      return;
+    }
+
+    // Validate password contains at least one special character
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(passwordData.password)) {
+      setError('Password must contain at least one special character (!@#$%^&*(),.?":{}|<>).');
+      return;
+    }
+
     setLoading(true);
 
     try {
       const response = await authAPI.upgradeToRegistered(passwordData);
       updateUser(response.data.user);
-      setSuccess('Successfully upgraded to Registered user!');
+      setSuccess('Successfully upgraded to Standard user!');
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Upgrade failed');
@@ -72,17 +107,17 @@ function Upgrade() {
       {isGuest && (
         <div className="upgrade-container">
           <div className="upgrade-card guest-upgrade">
-            <h2>Step 1: Upgrade to Registered User</h2>
+            <h2>Step 1: Upgrade to Standard Account</h2>
             <p className="upgrade-description">
-              As a guest, you have limited access. Upgrade to registered user first.
+              As a guest, you have limited access. Upgrade to standard account first.
             </p>
-            
+
             {!showPasswordForm ? (
               <button
                 className="btn btn-primary"
                 onClick={() => setShowPasswordForm(true)}
               >
-                Upgrade to Registered
+                Upgrade to Standard
               </button>
             ) : (
               <form onSubmit={handleGuestToRegistered} className="upgrade-form">
@@ -95,9 +130,10 @@ function Upgrade() {
                     className="input-field"
                     value={passwordData.password}
                     onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
-                    placeholder="Password (min 8 characters)"
+                    placeholder="Password (8-16 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char)"
                     required
                     minLength="8"
+                    maxLength="16"
                   />
                 </div>
                 <div className="form-group">
@@ -110,10 +146,11 @@ function Upgrade() {
                     placeholder="Confirm Password"
                     required
                     minLength="8"
+                    maxLength="16"
                   />
                 </div>
                 <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? 'Upgrading...' : 'Upgrade to Registered'}
+                  {loading ? 'Upgrading...' : 'Upgrade to Standard'}
                 </button>
                 <button
                   type="button"
@@ -131,7 +168,8 @@ function Upgrade() {
         </div>
       )}
 
-      <div className="upgrade-container">
+      {!isGuest && (
+        <div className="upgrade-container">
         <div className="plan-card current">
           <h2>Current Plan</h2>
           <div className="plan-name">{user?.account_type === 'premium' ? 'Premium' : user?.user_type === 'guest' ? 'Guest' : 'Standard'}</div>
@@ -192,6 +230,7 @@ function Upgrade() {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }

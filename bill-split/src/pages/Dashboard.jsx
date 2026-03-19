@@ -46,11 +46,11 @@ function Dashboard() {
             <h1>⏰ Daily Access Limit Reached</h1>
             <p>You've used your 6 hours of guest access for today.</p>
             <p>
-              Please come back tomorrow or upgrade to a registered account for
+              Please come back tomorrow or upgrade to a standard account for
               unlimited access.
             </p>
             <Link to="/upgrade" className="btn btn-primary">
-              Upgrade to Registered
+              Upgrade to Standard
             </Link>
           </div>
         </main>
@@ -121,29 +121,31 @@ function Dashboard() {
         <div className="dashboard-content">
           <div className="dashboard-header-section">
             <h2>My Bills</h2>
-            <div className="header-actions">
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowCreateModal(true)}
-                disabled={!canCreateBill}
-              >
-                + Create Bill
-              </button>
-              {!canCreateBill && isStandard && (
-                <span className="limit-message">
-                  Monthly bill limit reached (5/5).{" "}
-                  <Link to="/upgrade">Upgrade to Premium</Link> for unlimited
-                  bills.
-                </span>
-              )}
-              {!canCreateBill && isGuest && (
-                <span className="limit-message">
-                  Guest users cannot create bills.{" "}
-                  <Link to="/upgrade">Upgrade to Registered</Link> to create
-                  bills.
-                </span>
-              )}
-            </div>
+            {!isGuest && (
+              <div className="header-actions">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowCreateModal(true)}
+                  disabled={!canCreateBill}
+                >
+                  + Create Bill
+                </button>
+                {!canCreateBill && isStandard && (
+                  <span className="limit-message">
+                    Monthly bill limit reached (5/5).{" "}
+                    <Link to="/upgrade">Upgrade to Premium</Link> for unlimited
+                    bills.
+                  </span>
+                )}
+                {!canCreateBill && isGuest && (
+                  <span className="limit-message">
+                    Guest users cannot create bills.{" "}
+                    <Link to="/upgrade">Upgrade to Standard</Link> to create
+                    bills.
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {isGuest && !isPremium && (
@@ -151,13 +153,13 @@ function Dashboard() {
               <p>
                 ⚠️ Guest users have limited access ({remainingAccessHours} hours
                 remaining today).
-                <Link to="/upgrade"> Upgrade to Registered</Link> for full
+                <Link to="/upgrade"> Upgrade to Standard</Link> for full
                 access.
               </p>
             </div>
           )}
 
-          {isStandard && (
+          {!isGuest && isStandard && (
             <div className="bill-limit-notice">
               <p>
                 📊 Standard Plan: <strong>{remainingBillsThisMonth}</strong>{" "}
@@ -195,15 +197,17 @@ function Dashboard() {
                       Code: {bill.invitation_code}
                     </span>
                     <div className="bill-actions">
-                      <button
-                        className="btn btn-sm"
-                        onClick={() => {
-                          setSelectedBill(bill);
-                          setShowInviteModal(true);
-                        }}
-                      >
-                        Invite
-                      </button>
+                      {!isGuest && (
+                        <button
+                          className="btn btn-sm"
+                          onClick={() => {
+                            setSelectedBill(bill);
+                            setShowInviteModal(true);
+                          }}
+                        >
+                          Invite
+                        </button>
+                      )}
                       <Link
                         to={`/bills/${bill.id}`}
                         className="btn btn-sm btn-primary"

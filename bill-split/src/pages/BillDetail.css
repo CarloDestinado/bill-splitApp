@@ -341,12 +341,16 @@
   border-radius: var(--radius-full);
   font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
 }
 
 .time-remaining-badge::before {
   content: "⏰";
   font-size: 1rem;
+}
+
+.time-remaining-badge span {
+  display: contents;
 }
 
 /* Guest upgrade prompt */
@@ -399,18 +403,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--slate-100);
+  background: #b3f6c4;
   color: var(--slate-600);
   padding: 0.5rem 1rem;
   border-radius: var(--radius-full);
   font-size: 0.8rem;
   font-weight: 600;
   margin-top: 1rem;
-}
-
-.view-only-notice::before {
-  content: "👁";
-  font-size: 0.9rem;
 }
 
 /* Responsive adjustments for guest elements */

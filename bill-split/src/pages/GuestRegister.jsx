@@ -149,7 +149,7 @@ function GuestRegister() {
               Already have an account? <Link to="/login">Login here</Link>
             </p>
             <p className="upgrade-hint">
-              💡 <strong>Tip:</strong> After creating your account, you can upgrade to Registered anytime by setting a password in your Profile.
+              💡 <strong>Tip:</strong> After creating your account, you can upgrade to Standard anytime by setting a password in your Profile.
             </p>
           </div>
         </div>

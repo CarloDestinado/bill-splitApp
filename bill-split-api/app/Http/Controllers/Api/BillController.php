@@ -93,25 +93,27 @@ class BillController extends Controller
         $user = $request->user();
         $bill = Bill::with(['creator', 'users', 'invitations'])->findOrFail($id);
 
-        // Track guest access hours
+        // Track guest access hours based on actual time elapsed
         if ($user->isGuest()) {
             $now = now();
             $accessResetAt = $user->access_reset_at;
 
             // Check if we need to reset the daily counter (24 hours have passed)
             if ($accessResetAt === null || $now->diffInHours($accessResetAt) >= 24) {
-                // Reset counter
-                $user->access_hours_used = 1;
+                // Reset - set the baseline time to now
                 $user->access_reset_at = $now;
+                $user->access_hours_used = 0;
             } else {
-                // Increment access hours
-                $user->access_hours_used += 1;
+                // Calculate actual hours used since reset time
+                $hoursSinceReset = $now->diffInHours($accessResetAt);
+                $user->access_hours_used = $hoursSinceReset;
             }
+            
             $user->last_access_time = $now;
             $user->save();
 
-            // Check if guest has exceeded access limit
-            if ($user->access_hours_used > 6) {
+            // Check if guest has exceeded access limit (6 hours/day)
+            if ($user->access_hours_used >= 6) {
                 return response()->json([
                     'message' => 'Guest access limit reached (6 hours/day). Please upgrade to registered account.',
                     'access_limit_reached' => true,

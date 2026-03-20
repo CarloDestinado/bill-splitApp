@@ -272,6 +272,32 @@
   box-shadow: none;
 }
 
+.guest-login-btn {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: white;
+  color: var(--slate-700);
+  border: 2px solid var(--slate-300);
+  border-radius: var(--radius-lg);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.guest-login-btn:hover:not(:disabled) {
+  background: var(--slate-50);
+  border-color: var(--slate-400);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
+}
+
+.guest-login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .divider {
   text-align: center;
   color: var(--slate-400);

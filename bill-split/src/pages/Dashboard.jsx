@@ -22,10 +22,19 @@ function Dashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
+  const [filter, setFilter] = useState('all'); // 'all', 'created', 'joined'
 
   useEffect(() => {
     loadBills();
   }, []);
+
+  // Auto-logout for guest users when access hours reach 0
+  useEffect(() => {
+    if (isGuest && !isPremium && remainingAccessHours <= 0) {
+      logout();
+      navigate('/login');
+    }
+  }, [isGuest, isPremium, remainingAccessHours, logout, navigate]);
 
   // Check guest access limit (but premium users always have access)
   if (isGuest && !isPremium && !canAccessBills) {
@@ -70,6 +79,17 @@ function Dashboard() {
       setLoading(false);
     }
   };
+
+  // Filter bills based on ownership
+  const filteredBills = bills.filter((bill) => {
+    if (filter === 'created') {
+      return bill.created_by === user?.id;
+    }
+    if (filter === 'joined') {
+      return bill.created_by !== user?.id;
+    }
+    return true; // 'all' shows everything
+  });
 
   const handleLogout = () => {
     logout();
@@ -148,10 +168,31 @@ function Dashboard() {
             )}
           </div>
 
+          <div className="bill-filter-tabs">
+            <button
+              className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              All Bills
+            </button>
+            <button
+              className={`filter-tab ${filter === 'created' ? 'active' : ''}`}
+              onClick={() => setFilter('created')}
+            >
+              My Bills
+            </button>
+            <button
+              className={`filter-tab ${filter === 'joined' ? 'active' : ''}`}
+              onClick={() => setFilter('joined')}
+            >
+              Joined Bills
+            </button>
+          </div>
+
           {isGuest && !isPremium && (
             <div className="guest-notice">
               <p>
-                ⚠️ Guest users have limited access ({remainingAccessHours} hours
+                ⚠️ Guest users have limited access ({Math.floor(remainingAccessHours)} hours
                 remaining today).
                 <Link to="/upgrade"> Upgrade to Standard</Link> for full
                 access.
@@ -172,13 +213,15 @@ function Dashboard() {
 
           {loading ? (
             <div className="loading">Loading bills...</div>
-          ) : bills.length === 0 ? (
+          ) : filteredBills.length === 0 ? (
             <div className="empty-state">
-              <p>No bills yet. Create your first bill to get started!</p>
+              {filter === 'all' && <p>No bills yet. Create your first bill to get started!</p>}
+              {filter === 'created' && <p>You haven't created any bills yet.</p>}
+              {filter === 'joined' && <p>You haven't joined any bills yet.</p>}
             </div>
           ) : (
             <div className="bills-grid">
-              {bills.map((bill) => (
+              {filteredBills.map((bill) => (
                 <div key={bill.id} className="bill-card">
                   <div className="bill-header">
                     <h3>{bill.title}</h3>

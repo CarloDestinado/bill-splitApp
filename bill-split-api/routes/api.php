@@ -32,6 +32,7 @@ Route::middleware("auth:sanctum")->group(function () {
     Route::apiResource("/bills", BillController::class);
     Route::post("/bills/{id}/share", [BillController::class, "shareBill"]);
     Route::get("/bills/{id}/users", [BillController::class, "getBillUsers"]);
+    Route::post("/bills/join-with-code", [BillController::class, "joinWithCode"]);
 
     // Invitation routes
     Route::post("/invitations/create", [InvitationController::class, "createInvitation"]);

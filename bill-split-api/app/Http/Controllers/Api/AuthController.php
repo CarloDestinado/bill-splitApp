@@ -184,7 +184,14 @@ class AuthController extends Controller
             'message' => 'Guest registered successfully and added to bill',
             'user' => $user,
             'token' => $token,
-            'bill' => $bill,
+            'bill' => [
+                'id' => $bill->id,
+                'title' => $bill->title,
+                'total_amount' => $bill->total_amount,
+                'description' => $bill->description,
+                'status' => $bill->status,
+                'invitation_code' => $bill->invitation_code,
+            ],
         ], 201);
     }
 
@@ -194,11 +201,19 @@ class AuthController extends Controller
             'email' => 'required|email',
         ]);
 
-        $user = User::where('email', $request->email)->where('user_type', 'guest')->first();
+        // First check if user exists at all
+        $user = User::where('email', $request->email)->first();
 
         if (!$user) {
             throw ValidationException::withMessages([
-                'email' => ['No guest account found with this email.'],
+                'email' => ['No account found with this email address. Please register first.'],
+            ]);
+        }
+
+        // Check if the account is a guest account
+        if ($user->user_type !== 'guest') {
+            throw ValidationException::withMessages([
+                'email' => ['This is not a guest account. Please use the regular login instead.'],
             ]);
         }
 

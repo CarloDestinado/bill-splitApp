@@ -7,6 +7,8 @@ import Register from './pages/Register';
 import GuestRegister from './pages/GuestRegister';
 import GuestBillSearch from './pages/GuestBillSearch';
 import GuestLogin from './pages/GuestLogin';
+import GuestRegistration from './pages/GuestRegistration';
+import CodeInvite from './pages/CodeInvite';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Upgrade from './pages/Upgrade';
@@ -74,10 +76,26 @@ function AppRoutes() {
           }
         />
         <Route
+          path="/code-invite"
+          element={
+            <PublicRoute>
+              <CodeInvite />
+            </PublicRoute>
+          }
+        />
+        <Route
           path="/guest/login"
           element={
             <PublicRoute>
               <GuestLogin />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/guest/registration"
+          element={
+            <PublicRoute>
+              <GuestRegistration />
             </PublicRoute>
           }
         />

@@ -349,10 +349,6 @@
   font-size: 1rem;
 }
 
-.time-remaining-badge span {
-  display: contents;
-}
-
 /* Guest upgrade prompt */
 .guest-upgrade-prompt {
   background: linear-gradient(135deg, #f0fdf4, #dcfce7);

@@ -234,4 +234,67 @@ class BillController extends Controller
             'users' => $bill->users,
         ]);
     }
+
+    public function joinWithCode(Request $request)
+    {
+        $request->validate([
+            'invitation_code' => 'required|string',
+        ]);
+
+        $user = $request->user();
+
+        // Find bill by invitation code
+        $bill = Bill::where('invitation_code', strtoupper($request->invitation_code))->first();
+
+        if (!$bill) {
+            return response()->json([
+                'message' => 'Invalid invitation code',
+            ], 404);
+        }
+
+        // Check if user is already in the bill
+        if ($bill->users()->where('user_id', $user->id)->exists()) {
+            return response()->json([
+                'message' => 'You are already a member of this bill',
+            ], 400);
+        }
+
+        // Check if user is the creator
+        if ($bill->created_by === $user->id) {
+            return response()->json([
+                'message' => 'You are the creator of this bill',
+            ], 400);
+        }
+
+        // Check max users (3 for standard, unlimited for premium)
+        $currentUsers = $bill->users()->count();
+        $creator = $bill->creator;
+
+        if (!$creator->isPremium() && $currentUsers >= 3) {
+            return response()->json([
+                'message' => 'Maximum 3 users per bill for Standard accounts. Upgrade to Premium for more.',
+            ], 403);
+        }
+
+        // Add user to bill
+        $totalUsers = $currentUsers + 1;
+        $shareAmount = $bill->total_amount / $totalUsers;
+
+        BillUser::create([
+            'bill_id' => $bill->id,
+            'user_id' => $user->id,
+            'share_amount' => $shareAmount,
+            'payment_status' => 'pending',
+        ]);
+
+        // Recalculate share amounts for all existing users
+        foreach ($bill->billUsers as $billUser) {
+            $billUser->update(['share_amount' => $shareAmount]);
+        }
+
+        return response()->json([
+            'message' => 'Successfully joined the bill',
+            'bill' => $bill->load(['creator', 'users']),
+        ]);
+    }
 }

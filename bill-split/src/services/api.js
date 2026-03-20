@@ -60,6 +60,7 @@ export const billAPI = {
   delete: (id) => api.delete(`/bills/${id}`),
   share: (id, data) => api.post(`/bills/${id}/share`, data),
   getUsers: (id) => api.get(`/bills/${id}/users`),
+  joinWithCode: (data) => api.post('/bills/join-with-code', data),
 };
 
 // Invitation APIs

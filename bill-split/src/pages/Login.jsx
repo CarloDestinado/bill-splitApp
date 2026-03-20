@@ -138,11 +138,19 @@ function Login() {
             <button type="submit" className="login-btn" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>
+            <button
+              type="button"
+              className="guest-login-btn"
+              onClick={() => navigate("/guest/login")}
+              disabled={loading}
+            >
+              Login as Guest
+            </button>
           </form>
 
           <p className="divider">or continue with</p>
 
-          <Link to="/guest/login" className="access-code-btn">
+          <Link to="/code-invite" className="access-code-btn">
             🔍 Access Bill via Invitation Code
           </Link>
 

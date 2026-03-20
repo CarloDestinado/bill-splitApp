@@ -48,6 +48,34 @@ const AuthProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
+  // Check guest access limit and logout if expired
+  useEffect(() => {
+    if (!user || user.user_type !== 'guest') {
+      return;
+    }
+
+    const hoursRemaining = getRemainingAccessHours(user);
+    
+    // If hours reached 0, logout automatically
+    if (hoursRemaining <= 0) {
+      logout();
+      window.location.href = '/login';
+      return;
+    }
+
+    // Set up interval to check every minute
+    const checkInterval = setInterval(() => {
+      const hoursLeft = getRemainingAccessHours(user);
+      if (hoursLeft <= 0) {
+        logout();
+        window.location.href = '/login';
+      }
+    }, 60000); // Check every 60 seconds
+
+    return () => clearInterval(checkInterval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, token]);
+
   // Refresh user data (call this after guest accesses a bill)
   const refreshUser = async () => {
     try {
@@ -86,7 +114,8 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(user));
     setToken(token);
     setUser(user);
-    return response.data;
+    // Return the bill if it exists (for code invitation flow)
+    return { user, token, bill: bill || null };
   };
 
   const guestLogin = async (email) => {

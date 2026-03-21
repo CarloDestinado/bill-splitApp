@@ -42,6 +42,7 @@ export const authAPI = {
   upgradeToRegistered: (data) => api.post('/upgrade-account', data),
   forgotPassword: (data) => api.post('/forgot-password', data),
   resetPassword: (data) => api.post('/reset-password', data),
+  resendVerification: (data) => api.post('/email/verify/resend', data),
 };
 
 // User APIs

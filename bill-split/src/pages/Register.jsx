@@ -48,7 +48,13 @@ function Register() {
 
     try {
       await register(formData);
-      navigate("/login");
+      // Registration successful - redirect to login with success message
+      navigate("/login", { 
+        state: { 
+          message: "Registration successful! Please check your email to verify your account before logging in.",
+          email: formData.email
+        } 
+      });
     } catch (err) {
       const errors = err.response?.data?.errors;
       if (errors) {

@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Note: Auth routes are handled via API (see routes/api.php)
+// This is an API-only backend for the React frontend

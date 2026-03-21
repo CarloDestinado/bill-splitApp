@@ -172,17 +172,15 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Class Aliases
+    | Frontend URL
     |--------------------------------------------------------------------------
     |
-    | This array of class aliases will be registered when this application
-    | is started. However, feel free to register as many as you wish as
-    | the aliases are "lazy" loaded so they don't hinder performance.
+    | This value is used as the base URL for the frontend application. It is
+    | used when generating email verification links and other redirects to
+    | the frontend.
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
-    ])->toArray(),
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:5173'),
 
 ];

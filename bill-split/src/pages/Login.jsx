@@ -97,8 +97,9 @@ function Login() {
 
           {error && <div className="error-message">{error}</div>}
 
-          <form className="login-form" onSubmit={handleSubmit}>
+          <form className="login-form" onSubmit={handleSubmit} noValidate>
             <div className="input-group">
+              <label className="input-label">Email <span className="required-asterisk">*</span></label>
               <input
                 type="email"
                 placeholder="Email"
@@ -111,11 +112,12 @@ function Login() {
                 required
               />
               {errors.email && (
-                <span className="error-text">{errors.email}</span>
+                <span className="error-message">{errors.email}</span>
               )}
             </div>
             <div className="input-group">
               <div className="password-field">
+                <label className="input-label">Password <span className="required-asterisk">*</span></label>
                 <input
                   type="password"
                   placeholder="Password"
@@ -129,7 +131,7 @@ function Login() {
                 />
               </div>
               {errors.password && (
-                <span className="error-text">{errors.password}</span>
+                <span className="error-message">{errors.password}</span>
               )}
             </div>
             <Link to="/forgot-password" className="forgot-password">

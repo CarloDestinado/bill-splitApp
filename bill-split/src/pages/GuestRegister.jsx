@@ -95,12 +95,12 @@ function GuestRegister() {
             <div className="bill-amount">₱{parseFloat(bill?.total_amount || 0).toFixed(2)}</div>
           </div>
 
-          <form onSubmit={handleRegister}>
+          <form onSubmit={handleRegister} noValidate>
             {error && <div className="error-message">{error}</div>}
 
             <div className="form-row">
               <div className="form-group">
-                <label>First Name *</label>
+                <label>First Name <span className="required-asterisk">*</span></label>
                 <input
                   type="text"
                   className="input-field"
@@ -111,7 +111,7 @@ function GuestRegister() {
                 />
               </div>
               <div className="form-group">
-                <label>Last Name *</label>
+                <label>Last Name <span className="required-asterisk">*</span></label>
                 <input
                   type="text"
                   className="input-field"
@@ -124,7 +124,7 @@ function GuestRegister() {
             </div>
 
             <div className="form-group">
-              <label>Email Address *</label>
+              <label>Email Address <span className="required-asterisk">*</span></label>
               <input
                 type="email"
                 className="input-field"

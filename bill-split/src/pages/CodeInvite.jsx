@@ -170,11 +170,12 @@ function CodeInvite() {
                   e.preventDefault();
                   verifyCode(invitationCode);
                 }}
+                noValidate
               >
                 {error && <div className="error-message">{error}</div>}
 
                 <div className="form-group">
-                  <label>Invitation Code</label>
+                  <label>Invitation Code <span className="required-asterisk">*</span></label>
                   <input
                     type="text"
                     className="input-field code-input"
@@ -232,11 +233,11 @@ function CodeInvite() {
                   Please login with your account to access this bill
                 </p>
 
-                <form onSubmit={handleLogin} className="login-form">
+                <form onSubmit={handleLogin} className="login-form" noValidate>
                   {error && <div className="error-message">{error}</div>}
 
                   <div className="form-group">
-                    <label>Email Address</label>
+                    <label>Email Address <span className="required-asterisk">*</span></label>
                     <input
                       type="email"
                       name="email"
@@ -250,7 +251,7 @@ function CodeInvite() {
                   </div>
 
                   <div className="form-group">
-                    <label>Password</label>
+                    <label>Password <span className="required-asterisk">*</span></label>
                     <input
                       type="password"
                       name="password"

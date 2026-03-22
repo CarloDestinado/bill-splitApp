@@ -87,72 +87,93 @@ function Register() {
 
           {error && <div className="error-message">{error}</div>}
 
-          <form className="register-form" onSubmit={handleSubmit}>
+          <form className="register-form" onSubmit={handleSubmit} noValidate>
             <div className="form-row">
+              <div className="form-group">
+                <label>Last Name <span className="required-asterisk">*</span></label>
+                <input
+                  type="text"
+                  name="last_name"
+                  placeholder="Last Name (no spaces)"
+                  className="input-field"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>First Name <span className="required-asterisk">*</span></label>
+                <input
+                  type="text"
+                  name="first_name"
+                  placeholder="First Name (no spaces)"
+                  className="input-field"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Nickname <span className="required-asterisk">*</span></label>
               <input
                 type="text"
-                name="last_name"
-                placeholder="Last Name (no spaces)"
+                name="nickname"
+                placeholder="Nickname (required, unique)"
                 className="input-field"
-                value={formData.last_name}
-                onChange={handleChange}
-                required
-              />
-              <input
-                type="text"
-                name="first_name"
-                placeholder="First Name (no spaces)"
-                className="input-field"
-                value={formData.first_name}
+                value={formData.nickname}
                 onChange={handleChange}
                 required
               />
             </div>
-            <input
-              type="text"
-              name="nickname"
-              placeholder="Nickname (required, unique)"
-              className="input-field"
-              value={formData.nickname}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              className="input-field"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="username"
-              placeholder="Username (required, unique)"
-              className="input-field"
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password (8-16 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char)"
-              className="input-field"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="password"
-              name="password_confirmation"
-              placeholder="Confirm Password"
-              className="input-field"
-              value={formData.password_confirmation}
-              onChange={handleChange}
-              required
-            />
+            <div className="form-group">
+              <label>Email Address <span className="required-asterisk">*</span></label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                className="input-field"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Username <span className="required-asterisk">*</span></label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username (required, unique)"
+                className="input-field"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Password <span className="required-asterisk">*</span></label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password (8-16 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char)"
+                className="input-field"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Confirm Password <span className="required-asterisk">*</span></label>
+              <input
+                type="password"
+                name="password_confirmation"
+                placeholder="Confirm Password"
+                className="input-field"
+                value={formData.password_confirmation}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <button type="submit" className="register-btn" disabled={loading}>
               {loading ? "Creating Account..." : "Register"}
             </button>

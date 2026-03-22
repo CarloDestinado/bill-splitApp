@@ -110,12 +110,12 @@ function Profile() {
 
         <div className="profile-card">
           <h2>Personal Information</h2>
-          <form onSubmit={handleProfileUpdate}>
+          <form onSubmit={handleProfileUpdate} noValidate>
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}
             <div className="form-row">
               <div className="form-group">
-                <label>First Name</label>
+                <label>First Name <span className="required-asterisk">*</span></label>
                 <input
                   type="text"
                   className="input-field"
@@ -126,7 +126,7 @@ function Profile() {
                 />
               </div>
               <div className="form-group">
-                <label>Last Name</label>
+                <label>Last Name <span className="required-asterisk">*</span></label>
                 <input
                   type="text"
                   className="input-field"
@@ -138,7 +138,7 @@ function Profile() {
               </div>
             </div>
             <div className="form-group">
-              <label>Email</label>
+              <label>Email <span className="required-asterisk">*</span></label>
               <input
                 type="email"
                 className="input-field"
@@ -160,9 +160,9 @@ function Profile() {
             <p className="upgrade-description">
               Set a password to upgrade your account. Your existing information (name and email) will be kept.
             </p>
-            <form onSubmit={handleUpgrade}>
+            <form onSubmit={handleUpgrade} noValidate>
               <div className="form-group">
-                <label>Password</label>
+                <label>Password <span className="required-asterisk">*</span></label>
                 <input
                   type="password"
                   className="input-field"
@@ -174,7 +174,7 @@ function Profile() {
                 />
               </div>
               <div className="form-group">
-                <label>Confirm Password</label>
+                <label>Confirm Password <span className="required-asterisk">*</span></label>
                 <input
                   type="password"
                   className="input-field"

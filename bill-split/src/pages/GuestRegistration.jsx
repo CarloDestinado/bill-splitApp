@@ -132,11 +132,12 @@ function GuestRegistration() {
                   e.preventDefault();
                   verifyCode(invitationCode);
                 }}
+                noValidate
               >
                 {error && <div className="error-message">{error}</div>}
 
                 <div className="form-group">
-                  <label>Invitation Code</label>
+                  <label>Invitation Code <span className="required-asterisk">*</span></label>
                   <input
                     type="text"
                     className="input-field code-input"
@@ -188,12 +189,12 @@ function GuestRegistration() {
                 </div>
               </div>
 
-              <form onSubmit={handleRegister}>
+              <form onSubmit={handleRegister} noValidate>
                 {error && <div className="error-message">{error}</div>}
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>First Name *</label>
+                    <label>First Name <span className="required-asterisk">*</span></label>
                     <input
                       type="text"
                       name="first_name"
@@ -206,7 +207,7 @@ function GuestRegistration() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Last Name *</label>
+                    <label>Last Name <span className="required-asterisk">*</span></label>
                     <input
                       type="text"
                       name="last_name"
@@ -221,7 +222,7 @@ function GuestRegistration() {
                 </div>
 
                 <div className="form-group">
-                  <label>Email Address *</label>
+                  <label>Email Address <span className="required-asterisk">*</span></label>
                   <input
                     type="email"
                     name="email"
@@ -238,7 +239,7 @@ function GuestRegistration() {
                 </div>
 
                 <div className="form-group">
-                  <label>Nickname *</label>
+                  <label>Nickname <span className="required-asterisk">*</span></label>
                   <input
                     type="text"
                     name="nickname"

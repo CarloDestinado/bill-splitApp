@@ -92,11 +92,13 @@
 
 .form-group {
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.625rem;
   font-weight: 600;
   color: var(--slate-700);
   font-size: 0.95rem;
@@ -699,4 +701,11 @@
     gap: 1rem;
     align-items: flex-start;
   }
+}
+
+/* Required Asterisk */
+.required-asterisk {
+  color: #ef4444;
+  font-weight: 700;
+  margin-left: 0.25rem;
 }

@@ -39,9 +39,9 @@ function GuestBillSearch() {
 
       <div className="search-container">
         <div className="search-card">
-          <form onSubmit={handleVerify}>
+          <form onSubmit={handleVerify} noValidate>
             <div className="form-group">
-              <label>Invitation Code</label>
+              <label>Invitation Code <span className="required-asterisk">*</span></label>
               <input
                 type="text"
                 className="input-field code-input"

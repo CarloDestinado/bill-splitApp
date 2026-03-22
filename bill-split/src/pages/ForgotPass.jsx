@@ -84,23 +84,29 @@ function ForgotPass() {
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
 
-          <form className="forgotpass-form" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Nickname"
-              className="input-field"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email Address"
-              className="input-field"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+          <form className="forgotpass-form" onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label>Nickname <span className="required-asterisk">*</span></label>
+              <input
+                type="text"
+                placeholder="Nickname"
+                className="input-field"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Email Address <span className="required-asterisk">*</span></label>
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="input-field"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
             <button type="submit" className="forgotpass-btn" disabled={loading}>
               {loading ? "Resetting..." : "Reset Password"}
             </button>

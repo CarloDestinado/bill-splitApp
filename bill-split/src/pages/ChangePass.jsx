@@ -132,25 +132,31 @@ function ChangePass() {
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
 
-          <form className="changepass-form" onSubmit={handleSubmit}>
-            <input
-              type="password"
-              name="password"
-              placeholder="New Password (min 8 characters)"
-              className="input-field"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="password"
-              name="password_confirmation"
-              placeholder="Confirm New Password"
-              className="input-field"
-              value={formData.password_confirmation}
-              onChange={handleChange}
-              required
-            />
+          <form className="changepass-form" onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label>New Password <span className="required-asterisk">*</span></label>
+              <input
+                type="password"
+                name="password"
+                placeholder="New Password (min 8 characters)"
+                className="input-field"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Confirm New Password <span className="required-asterisk">*</span></label>
+              <input
+                type="password"
+                name="password_confirmation"
+                placeholder="Confirm New Password"
+                className="input-field"
+                value={formData.password_confirmation}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <button type="submit" className="changepass-btn" disabled={loading}>
               {loading ? "Resetting Password..." : "Reset Password"}
             </button>

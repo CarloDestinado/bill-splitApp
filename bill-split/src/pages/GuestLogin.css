@@ -84,6 +84,9 @@
 
 .form-group {
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-group label {
@@ -91,7 +94,6 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--slate-700);
-  margin-bottom: 0.5rem;
 }
 
 .input-field {
@@ -197,4 +199,11 @@
   .guest-login-card {
     padding: 2rem 1.5rem;
   }
+}
+
+/* Required Asterisk */
+.required-asterisk {
+  color: #ef4444;
+  font-weight: 700;
+  margin-left: 0.25rem;
 }

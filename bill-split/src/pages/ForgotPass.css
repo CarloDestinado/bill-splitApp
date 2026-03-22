@@ -169,6 +169,20 @@
   color: var(--slate-800);
 }
 
+.form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-label {
+  display: block;
+  font-weight: 600;
+  color: var(--slate-700);
+  font-size: 0.9rem;
+}
+
 .input-field:focus {
   outline: none;
   border-color: var(--primary-500);
@@ -363,4 +377,11 @@
   .illustration h3 {
     font-size: 1.25rem;
   }
+}
+
+/* Required Asterisk */
+.required-asterisk {
+  color: #ef4444;
+  font-weight: 700;
+  margin-left: 0.25rem;
 }

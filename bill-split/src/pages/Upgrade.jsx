@@ -120,7 +120,7 @@ function Upgrade() {
                 Upgrade to Standard
               </button>
             ) : (
-              <form onSubmit={handleGuestToRegistered} className="upgrade-form">
+              <form onSubmit={handleGuestToRegistered} noValidate className="upgrade-form">
                 {error && <div className="error-message">{error}</div>}
                 {success && <div className="success-message">{success}</div>}
                 <div className="form-group">

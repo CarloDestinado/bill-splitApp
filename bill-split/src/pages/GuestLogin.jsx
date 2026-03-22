@@ -40,11 +40,11 @@ function GuestLogin() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             {error && <div className="error-message">{error}</div>}
 
             <div className="form-group">
-              <label>Email Address</label>
+              <label>Email Address <span className="required-asterisk">*</span></label>
               <input
                 type="email"
                 className="input-field"

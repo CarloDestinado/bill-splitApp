@@ -286,10 +286,10 @@ function EditBillModal({ bill, onClose, onUpdate }) {
           <h2>Edit Bill: {bill.title}</h2>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           {error && <div className="error-message">{error}</div>}
           <div className="form-group">
-            <label>Bill Title</label>
+            <label>Bill Title <span className="required-asterisk">*</span></label>
             <input
               type="text"
               className="input-field"
@@ -300,7 +300,7 @@ function EditBillModal({ bill, onClose, onUpdate }) {
             />
           </div>
           <div className="form-group">
-            <label>Total Amount</label>
+            <label>Total Amount <span className="required-asterisk">*</span></label>
             <input
               type="number"
               step="0.01"

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { invitationAPI, authAPI } from "../services/api";
+import { invitationAPI } from "../services/api";
 import "./GuestRegistration.css";
 
 function GuestRegistration() {

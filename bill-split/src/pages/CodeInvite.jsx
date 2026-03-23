@@ -1,20 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { invitationAPI, authAPI, billAPI } from "../services/api";
+import { invitationAPI, billAPI } from "../services/api";
 import "./CodeInvite.css";
 
 function CodeInvite() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login, guestRegister } = useAuth();
+  const { login } = useAuth();
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    nickname: "",
-  });
   const [loginFormData, setLoginFormData] = useState({
     email: "",
     password: "",
@@ -55,61 +49,6 @@ function CodeInvite() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      const guestData = {
-        ...formData,
-        invitation_code: invitationCode.toUpperCase(),
-      };
-
-      const result = await guestRegister(guestData);
-
-      // guestRegister returns { user, token, bill } directly
-      const billData = result.bill;
-
-      console.log("Registration result:", result);
-      console.log("Bill data:", billData);
-      console.log("Bill from state:", bill);
-
-      // Navigate to the bill page
-      if (billData && billData.id) {
-        navigate(`/bills/${billData.id}`);
-      } else if (bill && bill.id) {
-        // Fallback: use the bill from state (verified in step 1)
-        navigate(`/bills/${bill.id}`);
-      } else {
-        console.error("No bill ID available for navigation");
-        setError("Failed to navigate to bill. Please try again.");
-      }
-    } catch (err) {
-      console.error("Registration error:", err);
-      const errors = err.response?.data?.errors;
-      if (errors) {
-        const firstError = Object.values(errors)[0];
-        setError(Array.isArray(firstError) ? firstError[0] : firstError);
-      } else {
-        setError(
-          err.response?.data?.message ||
-            "Registration failed. Please try again.",
-        );
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
   };
 
   const handleLoginInputChange = (e) => {

@@ -32,8 +32,8 @@ class Bill extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'bill_users')
-                    ->withPivot('share_amount', 'payment_status')
-                    ->withTimestamps();
+            ->withPivot('share_amount', 'payment_status')
+            ->withTimestamps();
     }
 
     public function invitations()
@@ -49,7 +49,7 @@ class Bill extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($bill) {
             $bill->invitation_code = strtoupper(substr(md5(uniqid()), 0, 8));
         });

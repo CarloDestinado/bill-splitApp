@@ -6,15 +6,6 @@ import "./ChangePass.css";
 function ChangePass() {
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // Get email and nickname from previous page
-  const { email, nickname } = location.state || {};
-  
-  // Redirect back if no data provided
-  if (!email || !nickname) {
-    navigate("/forgot-password");
-    return null;
-  }
 
   const [formData, setFormData] = useState({
     password: "",
@@ -23,6 +14,15 @@ function ChangePass() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Get email and nickname from previous page
+  const { email, nickname } = location.state || {};
+
+  // Redirect back if no data provided
+  if (!email || !nickname) {
+    navigate("/forgot-password");
+    return null;
+  }
 
   const handleChange = (e) => {
     setFormData({

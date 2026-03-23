@@ -9,7 +9,6 @@ use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class InvitationController extends Controller
 {
@@ -43,7 +42,7 @@ class InvitationController extends Controller
             ->where('status', 'pending')
             ->first();
 
-        if (!$invitation) {
+        if (! $invitation) {
             return response()->json([
                 'valid' => false,
                 'message' => 'Invalid or expired invitation code',
@@ -52,6 +51,7 @@ class InvitationController extends Controller
 
         if ($invitation->isExpired()) {
             $invitation->update(['status' => 'expired']);
+
             return response()->json([
                 'valid' => false,
                 'message' => 'Invitation code has expired',
@@ -82,10 +82,11 @@ class InvitationController extends Controller
 
         // First check if the code is a bill's invitation code
         $bill = Bill::where('invitation_code', strtoupper($request->invitation_code))->first();
-        
+
         if ($bill) {
             // Bill found, check if email exists
             $user = User::where('email', $request->email)->first();
+
             return response()->json([
                 'exists' => $user !== null,
                 'user_type' => $user ? $user->user_type : null,
@@ -103,7 +104,7 @@ class InvitationController extends Controller
             ->where('invitee_email', $request->email)
             ->first();
 
-        if (!$invitation) {
+        if (! $invitation) {
             return response()->json([
                 'message' => 'This email is not associated with the invitation code',
             ], 404);
@@ -165,6 +166,7 @@ class InvitationController extends Controller
 
         if ($invitation->isExpired()) {
             $invitation->update(['status' => 'expired']);
+
             return response()->json([
                 'message' => 'Invitation has expired',
             ], 400);
@@ -179,7 +181,7 @@ class InvitationController extends Controller
         // Find or create user
         $user = User::where('email', $invitation->invitee_email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'message' => 'No account found with this email. Please register first.',
             ], 404);
@@ -187,7 +189,7 @@ class InvitationController extends Controller
 
         DB::transaction(function () use ($invitation, $user) {
             $bill = $invitation->bill;
-            
+
             // Add user to bill
             $currentUsers = $bill->users()->count();
             $totalUsers = $currentUsers + 1;

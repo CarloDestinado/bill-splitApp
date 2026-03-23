@@ -80,8 +80,8 @@ class User extends Authenticatable implements MustVerifyEmail
         $now = now();
 
         // Check if we need to reset the counter (new month)
-        if ($resetAt === null || 
-            $now->month !== $resetAt->month || 
+        if ($resetAt === null ||
+            $now->month !== $resetAt->month ||
             $now->year !== $resetAt->year) {
             return true; // New month, can create bills
         }
@@ -96,6 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($this->isGuest()) {
             return $accessHoursUsed < 6;
         }
+
         return true;
     }
 
@@ -104,7 +105,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new \App\Notifications\VerifyEmail());
+        $this->notify(new \App\Notifications\VerifyEmail);
     }
 
     /**
@@ -112,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasVerifiedEmail(): bool
     {
-        return !is_null($this->email_verified_at);
+        return ! is_null($this->email_verified_at);
     }
 
     /**

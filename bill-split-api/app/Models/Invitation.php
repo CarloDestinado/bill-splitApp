@@ -35,7 +35,7 @@ class Invitation extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($invitation) {
             $invitation->invitation_code = strtoupper(substr(md5(uniqid()), 0, 8));
             $invitation->expires_at = now()->addDays(7); // 7 days expiry

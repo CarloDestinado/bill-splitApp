@@ -7,7 +7,7 @@ import './BillDetail.css';
 function BillDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isGuest, remainingAccessHours, canAccessBills, refreshUser } = useAuth();
+  const { user, isGuest, remainingAccessHours, refreshUser } = useAuth();
   const [bill, setBill] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

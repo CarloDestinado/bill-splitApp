@@ -3,8 +3,8 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 
@@ -45,12 +45,12 @@ class VerifyEmail extends Notification
 
         return (new MailMessage)
             ->subject('Verify Your Email Address')
-            ->greeting('Hello ' . ($notifiable->first_name ?? 'User') . '!')
+            ->greeting('Hello '.($notifiable->first_name ?? 'User').'!')
             ->line('Thank you for registering on Bill Split App!')
             ->line('Please click the button below to verify your email address.')
             ->action('Verify Email Address', $verificationUrl)
             ->line('If you did not create an account, no further action is required.')
-            ->line('This verification link will expire ' . ($this->expirationSeconds === -1 ? 'never' : 'in ' . floor($this->expirationSeconds / 3600) . ' hours') . '.')
+            ->line('This verification link will expire '.($this->expirationSeconds === -1 ? 'never' : 'in '.floor($this->expirationSeconds / 3600).' hours').'.')
             ->salutation('Regards, Bill Split App Team');
     }
 
@@ -93,7 +93,7 @@ class VerifyEmail extends Notification
 
         $frontendQuery = http_build_query($queryParams);
 
-        return $frontendUrl . '/verify-email?' . $frontendQuery;
+        return $frontendUrl.'/verify-email?'.$frontendQuery;
     }
 
     /**

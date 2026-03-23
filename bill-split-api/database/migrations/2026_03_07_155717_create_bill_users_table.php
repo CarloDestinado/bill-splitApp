@@ -15,7 +15,7 @@ return new class extends Migration
             $table->decimal('share_amount', 10, 2)->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'partial'])->default('pending');
             $table->timestamps();
-            
+
             $table->unique(['bill_id', 'user_id']);
         });
     }

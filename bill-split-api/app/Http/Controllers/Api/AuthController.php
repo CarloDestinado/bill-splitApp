@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -71,7 +70,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (! Auth::attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -80,7 +79,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->firstOrFail();
 
         // Check if email is verified
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             throw ValidationException::withMessages([
                 'email' => ['Please verify your email address before logging in. Check your inbox for the verification link.'],
             ]);
@@ -106,9 +105,9 @@ class AuthController extends Controller
 
         // Generate unique username and nickname from email
         $emailPrefix = explode('@', $request->email)[0];
-        $uniqueSuffix = time() . rand(1000, 9999);
-        $nickname = $emailPrefix . '_' . substr($uniqueSuffix, -4);
-        $username = $emailPrefix . '_' . $uniqueSuffix;
+        $uniqueSuffix = time().rand(1000, 9999);
+        $nickname = $emailPrefix.'_'.substr($uniqueSuffix, -4);
+        $username = $emailPrefix.'_'.$uniqueSuffix;
 
         $user = User::create([
             'first_name' => $request->first_name,
@@ -147,7 +146,7 @@ class AuthController extends Controller
         $bill = \App\Models\Bill::where('invitation_code', strtoupper($request->invitation_code))
             ->first();
 
-        if (!$bill) {
+        if (! $bill) {
             throw ValidationException::withMessages([
                 'invitation_code' => ['Invalid invitation code. Please check the code and try again.'],
             ]);
@@ -155,8 +154,8 @@ class AuthController extends Controller
 
         // Generate unique username from email
         $emailPrefix = explode('@', $request->email)[0];
-        $uniqueSuffix = time() . rand(1000, 9999);
-        $username = $emailPrefix . '_' . $uniqueSuffix;
+        $uniqueSuffix = time().rand(1000, 9999);
+        $username = $emailPrefix.'_'.$uniqueSuffix;
 
         $user = User::create([
             'first_name' => $request->first_name,
@@ -213,7 +212,7 @@ class AuthController extends Controller
         // First check if user exists at all
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'email' => ['No account found with this email address. Please register first.'],
             ]);
@@ -280,7 +279,7 @@ class AuthController extends Controller
 
         // Generate reset token
         $token = Str::random(60);
-        
+
         // Store token in database
         \DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $request->email],
@@ -323,10 +322,10 @@ class AuthController extends Controller
 
         // Find user with matching nickname AND email
         $user = User::where('nickname', $request->nickname)
-                    ->where('email', $request->email)
-                    ->first();
+            ->where('email', $request->email)
+            ->first();
 
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'email' => ['No account found with this nickname and email combination.'],
             ]);

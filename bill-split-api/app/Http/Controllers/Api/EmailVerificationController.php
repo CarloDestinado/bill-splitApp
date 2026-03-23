@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 
 class EmailVerificationController extends Controller
 {
@@ -19,7 +19,7 @@ class EmailVerificationController extends Controller
     {
         $user = User::find($request->route('id'));
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'message' => 'User not found.',
             ], 404);
@@ -45,7 +45,7 @@ class EmailVerificationController extends Controller
         $signature = $request->query('signature');
         $expires = $request->query('expires');
 
-        if (!$signature || !$expires) {
+        if (! $signature || ! $expires) {
             return response()->json([
                 'message' => 'Invalid verification link. Missing signature or expires parameter.',
             ], 422);
@@ -60,11 +60,12 @@ class EmailVerificationController extends Controller
 
         // Validate the signature using Laravel's built-in method
         // The request already has the correct URL structure since we're using the API URL directly
-        if (!URL::hasValidSignature($request)) {
+        if (! URL::hasValidSignature($request)) {
             Log::error('Email verification failed: Invalid signature', [
                 'user_id' => $user->getKey(),
                 'user_email' => $user->getEmailForVerification(),
             ]);
+
             return response()->json([
                 'message' => 'Invalid or expired verification link.',
             ], 422);

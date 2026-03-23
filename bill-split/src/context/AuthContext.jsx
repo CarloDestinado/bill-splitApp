@@ -45,7 +45,6 @@ const AuthProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   // Check guest access limit and logout if expired
@@ -55,7 +54,7 @@ const AuthProvider = ({ children }) => {
     }
 
     const hoursRemaining = getRemainingAccessHours(user);
-    
+
     // If hours reached 0, logout automatically
     if (hoursRemaining <= 0) {
       logout();
@@ -73,7 +72,6 @@ const AuthProvider = ({ children }) => {
     }, 60000); // Check every 60 seconds
 
     return () => clearInterval(checkInterval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, token]);
 
   // Refresh user data (call this after guest accesses a bill)
@@ -187,7 +185,7 @@ function checkGuestAccessLimit(user) {
   }
 
   const hoursSinceReset = (now - accessResetAt) / (1000 * 60 * 60);
-  
+
   // Reset after 24 hours
   if (hoursSinceReset >= 24) {
     return true;
@@ -212,7 +210,7 @@ function getRemainingAccessHours(user) {
   }
 
   const hoursSinceReset = (now - accessResetAt) / (1000 * 60 * 60);
-  
+
   if (hoursSinceReset >= 24) {
     return 6; // Reset after 24 hours
   }
@@ -224,30 +222,30 @@ function getRemainingAccessHours(user) {
 // Check if user can create a new bill (5 bills/month for standard, unlimited for premium)
 function checkCanCreateBill(user) {
   if (!user) return false;
-  
+
   // Premium users have unlimited bills
   if (user.account_type === 'premium') {
     return true;
   }
-  
+
   // Guest users cannot create bills
   if (user.user_type === 'guest') {
     return false;
   }
-  
+
   // Standard users: check monthly limit
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  
+
   // Check if the bill counter needs to be reset (new month)
   const lastBillMonth = user.last_bill_month ?? -1;
   const lastBillYear = user.last_bill_year ?? -1;
-  
+
   if (currentMonth !== lastBillMonth || currentYear !== lastBillYear) {
     return true; // New month, counter reset
   }
-  
+
   // Check if under the 5 bill limit
   return (user.bills_created_count || 0) < 5;
 }
@@ -255,30 +253,30 @@ function checkCanCreateBill(user) {
 // Get remaining bills user can create this month
 function getRemainingBillsThisMonth(user) {
   if (!user) return 0;
-  
+
   // Premium users have unlimited bills
   if (user.account_type === 'premium') {
     return Infinity;
   }
-  
+
   // Guest users cannot create bills
   if (user.user_type === 'guest') {
     return 0;
   }
-  
+
   // Standard users: check monthly limit
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
-  
+
   // Check if the bill counter needs to be reset (new month)
   const lastBillMonth = user.last_bill_month ?? -1;
   const lastBillYear = user.last_bill_year ?? -1;
-  
+
   if (currentMonth !== lastBillMonth || currentYear !== lastBillYear) {
     return 5; // New month, full allowance
   }
-  
+
   // Return remaining bills
   return Math.max(0, 5 - (user.bills_created_count || 0));
 }
@@ -286,12 +284,12 @@ function getRemainingBillsThisMonth(user) {
 // Check if user can add more people to a bill (3 max for standard, unlimited for premium)
 function checkCanAddPerson(user, currentPersonCount) {
   if (!user) return false;
-  
+
   // Premium users can add unlimited people
   if (user.account_type === 'premium') {
     return true;
   }
-  
+
   // Standard users: max 3 people per bill
   return currentPersonCount < 3;
 }

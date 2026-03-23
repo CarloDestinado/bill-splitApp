@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import "./VerifyEmail.css";
 
@@ -7,7 +7,6 @@ function VerifyEmail() {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("verifying");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyEmail = async () => {

@@ -8,14 +8,13 @@ use App\Models\BillUser;
 use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class BillController extends Controller
 {
     public function index(Request $request)
     {
         $user = $request->user();
-        
+
         $bills = Bill::where('created_by', $user->id)
             ->orWhereHas('users', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -34,7 +33,7 @@ class BillController extends Controller
         $user = $request->user();
 
         // Check if user can create bill
-        if (!$user->canCreateBill()) {
+        if (! $user->canCreateBill()) {
             return response()->json([
                 'message' => 'Bill creation limit reached. Upgrade to Premium for unlimited bills.',
             ], 403);
@@ -64,13 +63,13 @@ class BillController extends Controller
         ]);
 
         // Increment bill count for standard users
-        if (!$user->isPremium()) {
+        if (! $user->isPremium()) {
             $now = now();
             $resetAt = $user->bills_count_reset_at;
-            
+
             // Check if we need to reset the counter (new month)
-            if ($resetAt === null || 
-                $now->month !== $resetAt->month || 
+            if ($resetAt === null ||
+                $now->month !== $resetAt->month ||
                 $now->year !== $resetAt->year) {
                 // Reset counter for new month
                 $user->bills_created_count = 1;
@@ -108,7 +107,7 @@ class BillController extends Controller
                 $hoursSinceReset = $now->diffInHours($accessResetAt);
                 $user->access_hours_used = $hoursSinceReset;
             }
-            
+
             $user->last_access_time = $now;
             $user->save();
 
@@ -179,7 +178,7 @@ class BillController extends Controller
         $currentUsers = $bill->users()->count();
         $creator = $bill->creator;
 
-        if (!$creator->isPremium() && $currentUsers >= 3) {
+        if (! $creator->isPremium() && $currentUsers >= 3) {
             return response()->json([
                 'message' => 'Maximum 3 users per bill for Standard accounts. Upgrade to Premium for more.',
             ], 403);
@@ -191,7 +190,7 @@ class BillController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'message' => 'User not found',
             ], 404);
@@ -215,7 +214,7 @@ class BillController extends Controller
         // Recalculate share amounts
         $totalUsers = $bill->users()->count() + 1;
         $shareAmount = $bill->total_amount / $totalUsers;
-        
+
         foreach ($bill->billUsers as $billUser) {
             $billUser->update(['share_amount' => $shareAmount]);
         }
@@ -246,7 +245,7 @@ class BillController extends Controller
         // Find bill by invitation code
         $bill = Bill::where('invitation_code', strtoupper($request->invitation_code))->first();
 
-        if (!$bill) {
+        if (! $bill) {
             return response()->json([
                 'message' => 'Invalid invitation code',
             ], 404);
@@ -270,7 +269,7 @@ class BillController extends Controller
         $currentUsers = $bill->users()->count();
         $creator = $bill->creator;
 
-        if (!$creator->isPremium() && $currentUsers >= 3) {
+        if (! $creator->isPremium() && $currentUsers >= 3) {
             return response()->json([
                 'message' => 'Maximum 3 users per bill for Standard accounts. Upgrade to Premium for more.',
             ], 403);

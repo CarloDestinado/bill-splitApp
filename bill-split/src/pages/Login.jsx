@@ -11,7 +11,7 @@ function Login() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, guestLogin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -94,23 +94,6 @@ function Login() {
 
   // Show resend verification link if error contains verify message
   const showResendVerification = error && error.includes("verify your email");
-
-  const handleGuestLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      await guestLogin(email);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(
-        err.response?.data?.message || "Guest login failed. Please try again.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="login-page">

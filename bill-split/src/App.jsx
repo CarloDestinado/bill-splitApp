@@ -15,6 +15,7 @@ import Upgrade from './pages/Upgrade';
 import BillDetail from './pages/BillDetail';
 import ForgotPass from './pages/ForgotPass';
 import ChangePass from './pages/ChangePass';
+import VerifyEmail from './pages/VerifyEmail';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -154,6 +155,14 @@ function AppRoutes() {
           element={
             <PublicRoute>
               <ChangePass />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/verify-email"
+          element={
+            <PublicRoute>
+              <VerifyEmail />
             </PublicRoute>
           }
         />

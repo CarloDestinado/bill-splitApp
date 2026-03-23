@@ -99,11 +99,9 @@ const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     const response = await authAPI.register(userData);
-    const { user, token } = response.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    setToken(token);
-    setUser(user);
+    const { email } = response.data;
+    // Don't auto-login, just save email for resend verification
+    localStorage.setItem('pending_email', email);
     return response.data;
   };
 

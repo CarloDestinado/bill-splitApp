@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { authAPI } from "../services/api";
 import "./Login.css";
 
 function Login() {
@@ -8,9 +9,24 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const { login, guestLogin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get success message from navigation state (after registration)
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+      // Pre-fill email if provided
+      if (location.state?.email) {
+        setEmail(location.state.email);
+      }
+      // Clear the state so message doesn't persist on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -29,10 +45,26 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleResendVerification = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await authAPI.resendVerification({ email });
+      setSuccessMessage("Verification email sent! Please check your inbox.");
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Failed to resend verification email."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setErrors({});
+    setSuccessMessage("");
 
     if (!validateForm()) {
       return;
@@ -47,8 +79,10 @@ function Login() {
       const message =
         err.response?.data?.message || "Login failed. Please try again.";
 
-      // Check if it's an authentication error
-      if (err.response?.status === 401) {
+      // Check if it's an unverified email error
+      if (message.includes("verify your email")) {
+        setError("Please verify your email address before logging in.");
+      } else if (err.response?.status === 401) {
         setError("Incorrect email or password. Please try again.");
       } else {
         setError(message);
@@ -57,6 +91,9 @@ function Login() {
       setLoading(false);
     }
   };
+
+  // Show resend verification link if error contains verify message
+  const showResendVerification = error && error.includes("verify your email");
 
   const handleGuestLogin = async (e) => {
     e.preventDefault();
@@ -95,6 +132,9 @@ function Login() {
             Simplify your workflow and boost your productivity with Bill Split
           </p>
 
+          {successMessage && (
+            <div className="success-message">{successMessage}</div>
+          )}
           {error && <div className="error-message">{error}</div>}
 
           <form className="login-form" onSubmit={handleSubmit} noValidate>
@@ -134,9 +174,21 @@ function Login() {
                 <span className="error-message">{errors.password}</span>
               )}
             </div>
-            <Link to="/forgot-password" className="forgot-password">
-              Forgot Password?
-            </Link>
+            <div className="login-options">
+              <Link to="/forgot-password" className="forgot-password">
+                Forgot Password?
+              </Link>
+              {showResendVerification && (
+                <button
+                  type="button"
+                  className="resend-verification"
+                  onClick={handleResendVerification}
+                  disabled={loading}
+                >
+                  Resend Verification Email
+                </button>
+              )}
+            </div>
             <button type="submit" className="login-btn" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>

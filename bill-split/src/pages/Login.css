@@ -234,6 +234,50 @@
   text-decoration: none;
 }
 
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: flex-end;
+}
+
+.resend-verification {
+  background: none;
+  border: none;
+  color: var(--primary-600);
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color var(--transition-base);
+  font-weight: 500;
+  padding: 0;
+}
+
+.resend-verification:hover:not(:disabled) {
+  color: var(--primary-700);
+}
+
+.resend-verification:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: var(--slate-400);
+}
+
+.success-message {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #059669;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  border: 1px solid #a7f3d0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: slideIn 0.3s ease-out;
+}
+
 .login-btn {
   width: 100%;
   padding: 1rem 1.5rem;

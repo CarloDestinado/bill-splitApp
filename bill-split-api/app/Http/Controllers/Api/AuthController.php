@@ -54,12 +54,13 @@ class AuthController extends Controller
             'account_type' => 'standard',
         ]);
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+        // Send email verification notification
+        $user->sendEmailVerificationNotification();
 
         return response()->json([
-            'message' => 'User registered successfully.',
-            'user' => $user,
-            'token' => $token,
+            'message' => 'Registration successful! Please check your email to verify your account before logging in.',
+            'email_verified' => false,
+            'email' => $user->email,
         ], 201);
     }
 
@@ -78,12 +79,20 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->firstOrFail();
 
+        // Check if email is verified
+        if (!$user->hasVerifiedEmail()) {
+            throw ValidationException::withMessages([
+                'email' => ['Please verify your email address before logging in. Check your inbox for the verification link.'],
+            ]);
+        }
+
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
             'user' => $user,
             'token' => $token,
+            'email_verified' => $user->hasVerifiedEmail(),
         ]);
     }
 

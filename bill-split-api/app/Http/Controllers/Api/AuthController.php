@@ -100,21 +100,15 @@ class AuthController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users',
+            'username' => 'required|string|max:255|unique:users',
         ]);
-
-        // Generate unique username and nickname from email
-        $emailPrefix = explode('@', $request->email)[0];
-        $uniqueSuffix = time().rand(1000, 9999);
-        $nickname = $emailPrefix.'_'.substr($uniqueSuffix, -4);
-        $username = $emailPrefix.'_'.$uniqueSuffix;
 
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'nickname' => $nickname,
-            'username' => $username,
-            'email' => $request->email,
+            'nickname' => $request->first_name,
+            'username' => $request->username,
+            'email' => null,
             'user_type' => 'guest',
             'account_type' => 'standard',
             'access_reset_at' => now(),
@@ -135,11 +129,11 @@ class AuthController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users',
-            'nickname' => 'required|string|max:255|unique:users,nickname',
+            'username' => 'required|string|max:255|unique:users',
+            'nickname' => 'required|string|max:255',
             'invitation_code' => 'required|string',
         ], [
-            'nickname.unique' => 'This nickname has already been taken.',
+            'username.unique' => 'This username has already been taken.',
         ]);
 
         // Verify the invitation code first
@@ -152,17 +146,12 @@ class AuthController extends Controller
             ]);
         }
 
-        // Generate unique username from email
-        $emailPrefix = explode('@', $request->email)[0];
-        $uniqueSuffix = time().rand(1000, 9999);
-        $username = $emailPrefix.'_'.$uniqueSuffix;
-
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'nickname' => $request->nickname,
-            'username' => $username,
-            'email' => $request->email,
+            'username' => $request->username,
+            'email' => null,
             'user_type' => 'guest',
             'account_type' => 'standard',
             'access_reset_at' => now(),
@@ -206,22 +195,22 @@ class AuthController extends Controller
     public function loginGuest(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
         ]);
 
         // First check if user exists at all
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('username', $request->username)->first();
 
         if (! $user) {
             throw ValidationException::withMessages([
-                'email' => ['No account found with this email address. Please register first.'],
+                'username' => ['No account found with this username. Please register first.'],
             ]);
         }
 
         // Check if the account is a guest account
         if ($user->user_type !== 'guest') {
             throw ValidationException::withMessages([
-                'email' => ['This is not a guest account. Please use the regular login instead.'],
+                'username' => ['This is not a guest account. Please use the regular login instead.'],
             ]);
         }
 

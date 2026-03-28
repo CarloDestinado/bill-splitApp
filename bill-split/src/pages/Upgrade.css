@@ -1,9 +1,12 @@
 /* Upgrade Page - Modern Design */
 .upgrade-page {
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   padding: 2rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* Background decoration */
@@ -68,13 +71,15 @@
 }
 
 .upgrade-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 2rem;
   max-width: 1100px;
   margin: 0 auto 2rem;
   position: relative;
   z-index: 1;
+  overflow-x: auto;
+  padding-bottom: 1rem;
 }
 
 .upgrade-card {
@@ -83,8 +88,10 @@
   border-radius: var(--radius-2xl);
   padding: 2rem;
   box-shadow: var(--shadow-xl);
-  grid-column: 1 / -1;
   text-align: center;
+  min-width: 320px;
+  flex-shrink: 0;
+}
   border: 1px solid rgba(255, 255, 255, 0.5);
   transition: all var(--transition-base);
 }
@@ -100,13 +107,13 @@
 
 .upgrade-card h2 {
   font-size: 1.5rem;
-  color: var(--slate-800);
+  color: var(--gray-800);
   margin: 0 0 1rem 0;
   font-weight: 700;
 }
 
 .upgrade-description {
-  color: var(--slate-600);
+  color: var(--gray-600);
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
   line-height: 1.6;
@@ -128,26 +135,28 @@
 .form-group label {
   display: block;
   font-weight: 600;
-  color: var(--slate-700);
+  color: var(--gray-700);
   font-size: 0.9rem;
 }
 
 .input-field {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--slate-200);
+  border: 2px solid var(--gray-300);
   border-radius: var(--radius-lg);
   font-size: 1rem;
   font-family: inherit;
   transition: all var(--transition-base);
-  color: var(--slate-800);
+  color: var(--gray-800);
   background: white;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .input-field:focus {
-  outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+  outline: 1px solid var(--gray-300);
+  outline-offset: 1px;
+  border-color: var(--gray-300);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .btn {
@@ -174,14 +183,14 @@
 }
 
 .btn-secondary {
-  background-color: var(--slate-100);
-  color: var(--slate-700);
-  border: 1px solid var(--slate-200);
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-200);
   margin-left: 0.75rem;
 }
 
 .btn-secondary:hover {
-  background-color: var(--slate-200);
+  background-color: var(--gray-200);
 }
 
 .btn:focus {
@@ -213,7 +222,7 @@
 }
 
 .plan-card.current {
-  border-color: var(--slate-200);
+  border-color: var(--gray-200);
 }
 
 .plan-card.premium {
@@ -254,7 +263,7 @@
 
 .plan-name {
   font-size: 0.95rem;
-  color: var(--slate-500);
+  color: var(--gray-500);
   margin-bottom: 1rem;
   font-weight: 500;
 }
@@ -262,14 +271,14 @@
 .plan-price {
   font-size: 3rem;
   font-weight: 800;
-  color: var(--slate-800);
+  color: var(--gray-800);
   margin-bottom: 1.5rem;
   letter-spacing: -0.025em;
 }
 
 .plan-price span {
   font-size: 1rem;
-  color: var(--slate-500);
+  color: var(--gray-500);
   font-weight: 400;
 }
 
@@ -282,9 +291,9 @@
 
 .plan-features li {
   padding: 0.875rem 0;
-  border-bottom: 1px solid var(--slate-100);
+  border-bottom: 1px solid var(--gray-100);
   font-size: 0.95rem;
-  color: var(--slate-700);
+  color: var(--gray-700);
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -295,7 +304,7 @@
 }
 
 .plan-features li.disabled {
-  color: var(--slate-400);
+  color: var(--gray-400);
   text-decoration: line-through;
 }
 
@@ -319,29 +328,29 @@
 }
 
 .upgrade-btn:disabled {
-  background: var(--slate-300);
+  background: var(--gray-300);
   cursor: not-allowed;
   box-shadow: none;
 }
 
 .error-message {
-  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  background: #fee2e2;
   color: #dc2626;
   padding: 1rem 1.25rem;
   border-radius: var(--radius-lg);
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
-  border: 1px solid #fecaca;
+  border: 2px solid var(--gray-300);
 }
 
 .success-message {
-  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  background: #dcfce7;
   color: #16a34a;
   padding: 1rem 1.25rem;
   border-radius: var(--radius-lg);
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
-  border: 1px solid #bbf7d0;
+  border: 2px solid var(--gray-300);
 }
 
 @media (max-width: 768px) {

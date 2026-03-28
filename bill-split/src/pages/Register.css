@@ -1,6 +1,6 @@
 /* Register page styles - Modern Design */
 .register-page {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,7 +33,8 @@
   grid-template-columns: 1fr 1fr;
   width: 100%;
   max-width: 1200px;
-  min-height: 750px;
+  height: 100%;
+  max-height: 100vh;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
@@ -95,13 +96,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 3rem;
+  padding: 1rem 1.5rem;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
 }
 
 .register-right h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.1rem;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -111,20 +112,20 @@
 }
 
 .subtitle {
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   color: var(--slate-500);
-  margin: 0 0 2rem 0;
-  line-height: 1.6;
+  margin: 0 0 0.7rem 0;
+  line-height: 1.4;
 }
 
 .error-message {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  background: #fee2e2;
   color: #dc2626;
-  padding: 1rem 1.25rem;
+  padding: 0.6rem 0.9rem;
   border-radius: var(--radius-lg);
-  margin-bottom: 1.5rem;
-  font-size: 0.875rem;
-  border: 1px solid #fecaca;
+  margin-bottom: 0.7rem;
+  font-size: 0.75rem;
+  border: 2px solid var(--gray-300);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -144,48 +145,49 @@
 
 .input-field {
   width: 100%;
-  padding: 0.875rem 1.125rem;
-  border: 2px solid var(--slate-200);
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--gray-300);
   border-radius: var(--radius-lg);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-family: inherit;
   transition: all var(--transition-base);
   box-sizing: border-box;
   background: white;
-  color: var(--slate-800);
+  color: var(--gray-800);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.2rem;
 }
 
 .input-label {
   display: block;
   font-weight: 600;
-  color: var(--slate-700);
-  font-size: 0.9rem;
+  color: var(--gray-700);
+  font-size: 0.8rem;
 }
 
 .input-field:focus {
-  outline: none;
-  border-color: var(--primary-500);
+  outline: 1px solid var(--gray-300);
+  outline-offset: 1px;
+  border-color: var(--gray-300);
   background: white;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .input-field::placeholder {
-  color: var(--slate-400);
+  color: var(--gray-400);
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 0.7rem;
+  margin-bottom: 0.5rem;
 }
 
 .form-row .input-field {
@@ -198,21 +200,21 @@
 }
 
 .register-form .input-field {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .register-btn {
   width: 100%;
-  padding: 1rem 1.5rem;
+  padding: 0.7rem 1.1rem;
   background: var(--gradient-primary);
   color: #fff;
   border: none;
   border-radius: var(--radius-lg);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-base);
-  margin-top: 0.5rem;
+  margin-top: 0.1rem;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
   position: relative;
   overflow: hidden;
@@ -251,8 +253,8 @@
 .divider {
   text-align: center;
   color: var(--slate-400);
-  margin: 1.5rem 0;
-  font-size: 0.8rem;
+  margin: 0.5rem 0;
+  font-size: 0.7rem;
   font-weight: 500;
   position: relative;
   display: flex;
@@ -307,9 +309,9 @@
 
 .login-text {
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   color: var(--slate-600);
-  margin: 1rem 0 0 0;
+  margin: 0.2rem 0 0 0;
 }
 
 .login-text a {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { billAPI } from "../services/api";
+import logo from "../assets/bill_split_logo.png"; // Import logo
 import "./Dashboard.css";
 
 function Dashboard() {
@@ -42,7 +43,10 @@ function Dashboard() {
       <div className="dashboard">
         <header className="dashboard-header">
           <div className="header-content">
-            <h1 className="logo">Bill Split</h1>
+            <div className="brand-container">
+              <img src={logo} alt="Bill Split Logo" className="brand-logo" />
+              <h1 className="logo">Bill Split</h1>
+            </div>
             <div className="user-menu">
               <button onClick={logout} className="logout-btn">
                 Logout
@@ -110,7 +114,10 @@ function Dashboard() {
     <div className="dashboard">
       <header className="dashboard-header">
         <div className="header-content">
-          <h1 className="logo">Bill Split</h1>
+          <div className="brand-container">
+            <img src={logo} alt="Bill Split Logo" className="brand-logo" />
+            <h1 className="logo">Bill Split</h1>
+          </div>
           <div className="user-menu">
             <div className="user-info">
               <span className="user-name">

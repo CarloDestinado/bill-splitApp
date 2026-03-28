@@ -18,13 +18,10 @@ function BillDetail() {
     try {
       const response = await billAPI.getById(id);
       setBill(response.data.bill);
-
-      // Refresh user data to get updated access hours
       if (isGuest) {
         await refreshUser();
       }
     } catch (err) {
-      // Handle guest access limit error
       if (err.response?.status === 403 && err.response?.data?.access_limit_reached) {
         setAccessLimitReached(true);
         setError('');
@@ -37,13 +34,10 @@ function BillDetail() {
   };
 
   const handleDelete = async () => {
-    // Confirm before deleting
     const confirmed = window.confirm(
       `Are you sure you want to delete "${bill.title}"? This action cannot be undone.`
     );
-
     if (!confirmed) return;
-
     try {
       await billAPI.delete(id);
       navigate("/dashboard");
@@ -66,9 +60,7 @@ function BillDetail() {
     const confirmed = window.confirm(
       `Are you sure you want to ${bill.status === 'completed' ? 'mark as active' : 'mark as Done/Paid'} "${bill.title}"?`
     );
-
     if (!confirmed) return;
-
     try {
       const newStatus = bill.status === 'completed' ? 'active' : 'completed';
       const response = await billAPI.update(id, { status: newStatus });
@@ -90,32 +82,33 @@ function BillDetail() {
     return <div className="loading">Loading...</div>;
   }
 
-  // Guest access limit reached
   if (isGuest && accessLimitReached) {
     return (
       <div className="bill-detail">
-        <div className="bill-detail-header">
+        <div className="bill-detail-topbar">
           <button className="back-btn" onClick={() => navigate('/dashboard')}>
             ← Back to Dashboard
           </button>
         </div>
         <div className="bill-detail-content">
-          <div className="guest-limit-warning">
-            <p>⏰ Daily Access Limit Reached</p>
-          </div>
-          <div className="bill-info-card guest-view">
-            <h2 style={{ marginBottom: '1rem', color: 'var(--slate-800)' }}>
-              You've used your 6 hours of guest access for today
-            </h2>
-            <p style={{ color: 'var(--slate-600)', marginBottom: '1.5rem' }}>
-              Come back tomorrow or upgrade to a standard account for unlimited access.
-            </p>
-            <div className="guest-upgrade-prompt">
-              <h3>Upgrade to Standard Account</h3>
-              <p>Get unlimited access to all features by setting a password</p>
-              <Link to="/upgrade">
-                <button className="btn btn-primary">Upgrade Now</button>
-              </Link>
+          <div className="bill-detail-stack">
+            <div className="guest-limit-warning">
+              <p>⏰ Daily Access Limit Reached</p>
+            </div>
+            <div className="bill-info-card guest-view">
+              <h2 style={{ marginBottom: '1rem', color: 'var(--gray-800)' }}>
+                You've used your 6 hours of guest access for today
+              </h2>
+              <p style={{ color: 'var(--gray-600)', marginBottom: '1.5rem' }}>
+                Come back tomorrow or upgrade to a standard account for unlimited access.
+              </p>
+              <div className="guest-upgrade-prompt">
+                <h3>Upgrade to Standard Account</h3>
+                <p>Get unlimited access to all features by setting a password</p>
+                <Link to="/upgrade">
+                  <button className="btn btn-primary">Upgrade Now</button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -126,121 +119,125 @@ function BillDetail() {
   if (error || !bill) {
     return (
       <div className="bill-detail">
-        <div className="error-state">
-          <p>{error || 'Bill not found'}</p>
-          <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
-            Back to Dashboard
+        <div className="bill-detail-topbar">
+          <button className="back-btn" onClick={() => navigate('/dashboard')}>
+            ← Back to Dashboard
           </button>
+        </div>
+        <div className="bill-detail-content">
+          <div className="error-state">
+            <p>{error || 'Bill not found'}</p>
+            <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
+              Back to Dashboard
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Check if user is the creator
   const isCreator = user && bill.created_by === user.id;
 
   return (
     <div className="bill-detail">
-      <div className="bill-detail-header">
+      <div className="bill-detail-topbar">
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
           ← Back to Dashboard
         </button>
       </div>
-
       <div className="bill-detail-content">
-        {error && <div className="error-message">{error}</div>}
-        
-        {/* Guest Access Notice */}
-        {isGuest && (
-          <>
-            <div className="guest-access-notice">
-              <p>
-                ⚠️ You are viewing this bill as a <strong>Guest User</strong>.
-                <span className="time-remaining-badge">
-                  {remainingAccessHours === Infinity ? 'Unlimited' : `${Math.floor(remainingAccessHours)}h`} remaining today
-                </span>
-              </p>
-            </div>
-            <div className="view-only-notice">
-              👁 View-only access - Upgrade to edit bills
-            </div>
-          </>
-        )}
-
-        <div className={`bill-info-card ${isGuest ? 'guest-view' : ''}`}>
-          <div className="bill-title-section">
-            <h1>{bill.title}</h1>
-            <span className={`status ${bill.status}`}>{bill.status}</span>
-          </div>
-          <div className="bill-total">₱{parseFloat(bill.total_amount).toFixed(2)}</div>
-          {bill.description && <p className="bill-description">{bill.description}</p>}
-          {bill.due_date && (
-            <p className="bill-due">Due: {new Date(bill.due_date).toLocaleDateString()}</p>
+        <div className="bill-detail-stack">
+          {error && <div className="error-message">{error}</div>}
+          
+          {isGuest && (
+            <>
+              <div className="guest-access-notice">
+                <p>
+                  ⚠️ You are viewing this bill as a <strong>Guest User</strong>.
+                  <span className="time-remaining-badge">
+                    {remainingAccessHours === Infinity ? 'Unlimited' : `${Math.floor(remainingAccessHours)}h`} remaining today
+                  </span>
+                </p>
+              </div>
+              <div className="view-only-notice">
+                👁 View-only access - Upgrade to edit bills
+              </div>
+            </>
           )}
-          <p className="bill-code">
-            Invitation Code: <code>{bill.invitation_code}</code>
-          </p>
 
-          {/* Edit/Delete/Done buttons - Only for creator */}
-          {isCreator && !isGuest ? (
-            <div className="action-btn-container">
-              <button className="btn btn-primary" onClick={() => setShowEditModal(true)}>
-                Edit Bill
-              </button>
-              <button className="btn btn-archive" onClick={handleArchive}>
-                {bill.status === 'completed' ? 'Mark as Active' : 'Done/Paid'}
-              </button>
-              <button className="btn btn-danger" onClick={handleDelete}>
-                Delete Bill
-              </button>
+          <div className={`bill-info-card ${isGuest ? 'guest-view' : ''}`}>
+            <div className="bill-title-section">
+              <h1>{bill.title}</h1>
+              <span className={`status ${bill.status}`}>{bill.status}</span>
             </div>
-          ) : null}
-        </div>
-
-        <div className="users-card">
-          <h2>People Sharing This Bill</h2>
-          {bill.users && bill.users.length > 0 ? (
-            <div className="users-list">
-              {bill.users.map((userItem) => (
-                <div key={userItem.id} className="user-item">
-                  <div className="user-name">
-                    {userItem.first_name} {userItem.last_name}
-                    {userItem.id === bill.created_by && (
-                      <span className="creator-badge">Creator</span>
-                    )}
-                    {userItem.user_type === 'guest' && (
-                      <span className="guest-badge">Guest</span>
-                    )}
-                  </div>
-                  <div className="user-share">
-                    ₱{parseFloat(userItem.pivot?.share_amount || 0).toFixed(2)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="no-users">No users yet</p>
-          )}
-        </div>
-
-        {/* Guest Upgrade Prompt at bottom */}
-        {isGuest && (
-          <div className="guest-upgrade-prompt">
-            <h3>Upgrade to Standard Account</h3>
-            <p>
-              Guest access is limited to 6 hours per day. Upgrade to a standard account for:
+            <div className="bill-total">₱{parseFloat(bill.total_amount).toFixed(2)}</div>
+            {bill.description && <p className="bill-description">{bill.description}</p>}
+            {bill.due_date && (
+              <p className="bill-due">Due: {new Date(bill.due_date).toLocaleDateString()}</p>
+            )}
+            <p className="bill-code">
+              Invitation Code: <code>{bill.invitation_code}</code>
             </p>
-            <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '1rem auto', color: 'var(--slate-700)' }}>
-              <li>✓ Unlimited access to bills</li>
-              <li>✓ Create up to 5 bills per month</li>
-              <li>✓ Invite people to your bills</li>
-              <li>✓ Edit and manage bills</li>
-            </ul>
-            <Link to="/upgrade">
-              <button className="btn btn-primary">Upgrade Now</button>
-            </Link>
+
+            {isCreator && !isGuest ? (
+              <div className="action-btn-container">
+                <button className="btn btn-primary" onClick={() => setShowEditModal(true)}>
+                  Edit Bill
+                </button>
+                <button className="btn btn-archive" onClick={handleArchive}>
+                  {bill.status === 'completed' ? 'Mark as Active' : 'Mark as Done'}
+                </button>
+                <button className="btn btn-danger" onClick={handleDelete}>
+                  Delete Bill
+                </button>
+              </div>
+            ) : null}
           </div>
-        )}
+
+          <div className="users-card">
+            <h2>People Sharing This Bill</h2>
+            {bill.users && bill.users.length > 0 ? (
+              <div className="users-list">
+                {bill.users.map((userItem) => (
+                  <div key={userItem.id} className="user-item">
+                    <div className="user-name">
+                      {userItem.first_name} {userItem.last_name}
+                      {userItem.id === bill.created_by && (
+                        <span className="creator-badge">Creator</span>
+                      )}
+                      {userItem.user_type === 'guest' && (
+                        <span className="guest-badge">Guest</span>
+                      )}
+                    </div>
+                    <div className="user-share">
+                      ₱{parseFloat(userItem.pivot?.share_amount || 0).toFixed(2)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="no-users">No users yet</p>
+            )}
+          </div>
+
+          {isGuest && (
+            <div className="guest-upgrade-prompt">
+              <h3>Upgrade to Standard Account</h3>
+              <p>
+                Guest access is limited to 6 hours per day. Upgrade to a standard account for:
+              </p>
+              <ul style={{ textAlign: 'left', maxWidth: '400px', margin: '1rem auto', color: 'var(--slate-700)' }}>
+                <li>✓ Unlimited access to bills</li>
+                <li>✓ Create up to 5 bills per month</li>
+                <li>✓ Invite people to your bills</li>
+                <li>✓ Edit and manage bills</li>
+              </ul>
+              <Link to="/upgrade">
+                <button className="btn btn-primary">Upgrade Now</button>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
 
       {showEditModal && (
@@ -269,7 +266,6 @@ function EditBillModal({ bill, onClose, onUpdate }) {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       await onUpdate(formData);
     } catch (err) {

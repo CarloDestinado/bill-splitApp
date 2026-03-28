@@ -2,8 +2,10 @@
 .profile-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 2rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
 /* Background decoration */
@@ -19,28 +21,33 @@
   z-index: 0;
 }
 
-.profile-header {
-  max-width: 1000px;
-  margin: 0 auto 2rem;
+/* Top bar for back button */
+.profile-topbar {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 1rem;
 }
 
+/* Back button with margin for breathing room */
 .back-btn {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: var(--slate-700);
-  font-size: 0.9rem;
+  border: 1px solid var(--gray-200);
+  color: var(--gray-700);
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   padding: 0.75rem 1.25rem;
-  margin-bottom: 1.5rem;
   border-radius: var(--radius-lg);
   transition: all var(--transition-base);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 1rem;
+  margin-left: 1rem;
 }
 
 .back-btn:hover {
@@ -50,25 +57,26 @@
   box-shadow: var(--shadow-md);
 }
 
-.profile-header h1 {
-  font-size: 2.25rem;
-  background: white;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-  font-weight: 800;
-  letter-spacing: -0.025em;
+/* Main content container - centers the stack */
+.profile-content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0 2rem 2rem;
 }
 
-.profile-container {
-  max-width: 1000px;
-  margin: 0 auto;
+/* Stack container - now with a tighter max-width */
+.profile-stack {
+  width: 80%;
+  max-width: 700px;  /* Reduced from 1000px for a more compact look */
+  min-width: 320px;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  position: relative;
-  z-index: 1;
 }
 
 .profile-card {
@@ -79,6 +87,7 @@
   box-shadow: var(--shadow-xl);
   border: 1px solid rgba(255, 255, 255, 0.5);
   transition: all var(--transition-base);
+  width: 100%;
 }
 
 .profile-card:hover {
@@ -146,12 +155,6 @@
   text-transform: capitalize;
   letter-spacing: 0.025em;
 }
-
-/* .badge.premium {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-} */
 
 .badge.standard {
   background: linear-gradient(135deg, #94a3b8, #64748b);
@@ -230,7 +233,7 @@
   font-size: 1rem;
   font-family: inherit;
   transition: all var(--transition-base);
-  color: var(--slate-800);
+  color: var(--gray-800);
   background: white;
 }
 
@@ -302,23 +305,54 @@
   gap: 0.5rem;
 }
 
+/* Required Asterisk */
+.required-asterisk {
+  color: #ef4444;
+  font-weight: 700;
+  margin-left: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .profile-stack {
+    width: 90%;
+  }
+}
+
 @media (max-width: 768px) {
-  .profile-page {
-    padding: 1rem;
+  .profile-topbar {
+    margin-bottom: 0.5rem;
+  }
+
+  .back-btn {
+    margin-top: 0.75rem;
+    margin-left: 0.75rem;
+  }
+
+  .profile-content {
+    padding: 0 1rem 1rem;
+  }
+
+  .profile-stack {
+    width: 95%;
   }
 
   .form-row {
     grid-template-columns: 1fr;
   }
 
-  .profile-header h1 {
-    font-size: 1.75rem;
+  .profile-card {
+    padding: 1.5rem;
   }
 }
 
-/* Required Asterisk */
-.required-asterisk {
-  color: #ef4444;
-  font-weight: 700;
-  margin-left: 0.25rem;
+@media (max-width: 480px) {
+  .back-btn {
+    font-size: 0.85rem;
+    padding: 0.625rem 1rem;
+  }
+
+  .profile-card h2 {
+    font-size: 1.125rem;
+  }
 }

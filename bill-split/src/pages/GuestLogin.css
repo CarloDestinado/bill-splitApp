@@ -1,6 +1,6 @@
 /* Guest Login page styles */
 .guest-login-page {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,38 +93,47 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--slate-700);
+  color: var(--gray-700);
 }
 
 .input-field {
   width: 100%;
   padding: 0.875rem 1.125rem;
-  border: 2px solid var(--slate-200);
+  border: 2px solid var(--gray-300);
   border-radius: var(--radius-lg);
   font-size: 0.95rem;
   font-family: inherit;
   transition: all var(--transition-base);
   box-sizing: border-box;
   background: white;
-  color: var(--slate-800);
+  color: var(--gray-800);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .input-field:focus {
-  outline: none;
-  border-color: var(--primary-500);
+  outline: 1px solid var(--gray-300);
+  outline-offset: 1px;
+  border-color: var(--gray-300);
   background: white;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .input-field::placeholder {
-  color: var(--slate-400);
+  color: var(--gray-400);
 }
 
 .field-help {
   font-size: 0.8rem;
   color: var(--slate-500);
   margin-top: 0.5rem;
+}
+
+.field-help.checking {
+  color: var(--primary-600);
+}
+
+.field-help.success {
+  color: #16a34a;
 }
 
 .btn-full {
@@ -152,6 +161,8 @@
 .btn-primary:disabled {
   background: var(--slate-300);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .login-footer {
@@ -189,6 +200,7 @@
   font-size: 0.875rem;
   border: 1px solid #fecaca;
 }
+
 
 /* Responsive */
 @media (max-width: 480px) {

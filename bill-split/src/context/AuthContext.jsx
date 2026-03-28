@@ -104,7 +104,9 @@ const AuthProvider = ({ children }) => {
   };
 
   const guestRegister = async (userData) => {
-    const response = await authAPI.registerGuest(userData);
+    // Use registerGuestDirect if no invitation_code, otherwise use registerGuest (with code)
+    const endpoint = userData.invitation_code ? 'registerGuest' : 'registerGuestDirect';
+    const response = await authAPI[endpoint](userData);
     const { user, token, bill } = response.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
@@ -114,8 +116,8 @@ const AuthProvider = ({ children }) => {
     return { user, token, bill: bill || null };
   };
 
-  const guestLogin = async (email) => {
-    const response = await authAPI.loginGuest({ email });
+  const guestLogin = async ({ username }) => {
+    const response = await authAPI.loginGuest({ username });
     const { user, token } = response.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));

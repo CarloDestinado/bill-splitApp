@@ -1,6 +1,6 @@
 /* Code Invite Page - Modern Design */
 .code-invite-page {
-  min-height: 100vh;
+  height: 100vh;
   background: var(--gradient-primary);
   padding: 2rem;
   display: flex;
@@ -186,19 +186,20 @@
 .input-field {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--slate-200);
+  border: 2px solid var(--gray-300);
   border-radius: var(--radius-lg);
   font-size: 1rem;
   font-family: inherit;
   transition: all var(--transition-base);
-  color: var(--slate-800);
+  color: var(--gray-800);
   background: white;
 }
 
 .input-field:focus {
-  outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+  outline: 1px solid var(--gray-300);
+  outline-offset: 1px;
+  border-color: var(--gray-300);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .input-field:disabled {
@@ -253,13 +254,13 @@
 }
 
 .btn-secondary {
-  background-color: var(--slate-100);
-  color: var(--slate-700);
-  border: 1px solid var(--slate-200);
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-200);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--slate-200);
+  background-color: var(--gray-200);
 }
 
 .btn-full {
@@ -277,17 +278,17 @@
 }
 
 .error-message {
-  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  background: #fee2e2;
   color: #dc2626;
   padding: 1rem 1.25rem;
   border-radius: var(--radius-lg);
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
-  border: 1px solid #fecaca;
+  border: 2px solid var(--gray-300);
 }
 
 .login-footer {
-  border-top: 1px solid var(--slate-100);
+  border-top: 1px solid var(--gray-200);
   padding-top: 1.5rem;
   margin-top: 1.5rem;
   text-align: center;
@@ -295,7 +296,7 @@
 
 .login-footer p {
   font-size: 0.9rem;
-  color: var(--slate-600);
+  color: var(--gray-600);
   margin: 0;
 }
 

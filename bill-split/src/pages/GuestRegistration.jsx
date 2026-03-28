@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { invitationAPI } from "../services/api";
+import { invitationAPI, userAPI } from "../services/api";
 import "./GuestRegistration.css";
 
 function GuestRegistration() {
@@ -12,7 +12,7 @@ function GuestRegistration() {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    email: "",
+    username: "",
     nickname: "",
   });
   const [invitationCode, setInvitationCode] = useState("");
@@ -53,12 +53,46 @@ function GuestRegistration() {
     }
   };
 
+  const validateUsername = (value) => {
+    if (!value || value.trim() === "") {
+      return "Username is required";
+    }
+    return "";
+  };
+
+  const checkUsernameExists = async (username) => {
+    try {
+      const response = await userAPI.checkUsername({ username });
+      if (response.data.exists) {
+        return "Username already exists";
+      }
+      return "";
+    } catch (err) {
+      return "";
+    }
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+
+    const usernameError = validateUsername(formData.username);
+    if (usernameError) {
+      setError(usernameError);
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // Check if username is already taken
+      const usernameTaken = await checkUsernameExists(formData.username);
+      if (usernameTaken) {
+        setLoading(false);
+        setError(usernameTaken);
+        return;
+      }
+
       const guestData = {
         ...formData,
         invitation_code: invitationCode.toUpperCase(),
@@ -87,13 +121,20 @@ function GuestRegistration() {
       console.error("Registration error:", err);
       const errors = err.response?.data?.errors;
       if (errors) {
-        const firstError = Object.values(errors)[0];
-        setError(Array.isArray(firstError) ? firstError[0] : firstError);
-      } else {
-        setError(
-          err.response?.data?.message ||
-            "Registration failed. Please try again.",
+        // Filter out email errors
+        const filteredErrors = Object.entries(errors).filter(
+          ([key]) => !key.toLowerCase().includes('email')
         );
+        if (filteredErrors.length > 0) {
+          const firstError = Object.values(filteredErrors[0])[0];
+          setError(Array.isArray(firstError) ? firstError[0] : firstError);
+        }
+      } else {
+        const errorMsg = err.response?.data?.message || "Registration failed. Please try again.";
+        // Filter out email errors too
+        if (!errorMsg.toLowerCase().includes('email')) {
+          setError(errorMsg);
+        }
       }
     } finally {
       setLoading(false);
@@ -222,20 +263,17 @@ function GuestRegistration() {
                 </div>
 
                 <div className="form-group">
-                  <label>Email Address <span className="required-asterisk">*</span></label>
+                  <label>Username <span className="required-asterisk">*</span></label>
                   <input
-                    type="email"
-                    name="email"
+                    type="text"
+                    name="username"
                     className="input-field"
-                    value={formData.email}
+                    value={formData.username}
                     onChange={handleInputChange}
-                    placeholder="Email Address"
+                    placeholder="Username"
                     required
                     disabled={loading}
                   />
-                  <p className="field-help">
-                    We'll send bill updates to this email
-                  </p>
                 </div>
 
                 <div className="form-group">

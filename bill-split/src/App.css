@@ -1,6 +1,6 @@
 /* Reset default styles that might conflict */
 .app {
-  min-height: 100vh;
+  height: 100vh;
 }
 
 /* Keep any global styles that don't conflict with pages */

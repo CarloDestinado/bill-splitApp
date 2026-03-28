@@ -63,134 +63,134 @@ function Profile() {
 
   return (
     <div className="profile-page">
-      <div className="profile-header">
+      <div className="profile-topbar">
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
           ← Back to Dashboard
         </button>
-        <h1>My Profile</h1>
       </div>
-
-      <div className="profile-container">
-        <div className="profile-card">
-          <h2>Account Information</h2>
-          <div className="account-info">
-            <div className="info-row">
-              <span className="label">Account Type:</span>
-              <span className={`badge ${user?.account_type}`}>
-                {user?.account_type}
-              </span>
-            </div>
-            <div className="info-row">
-              <span className="label">User Type:</span>
-              <span className={`badge ${user?.user_type}`}>
-                {user?.user_type}
-              </span>
-            </div>
-            {user?.user_type === 'guest' && (
+      <div className="profile-content">
+        <div className="profile-stack">
+          <div className="profile-card">
+            <h2>Account Information</h2>
+            <div className="account-info">
               <div className="info-row">
-                <span className="label">Access Hours Used:</span>
-                <span>{user?.access_hours_used || 0}/6 hours</span>
+                <span className="label">Account Type:</span>
+                <span className={`badge ${user?.account_type}`}>
+                  {user?.account_type}
+                </span>
+              </div>
+              <div className="info-row">
+                <span className="label">User Type:</span>
+                <span className={`badge ${user?.user_type}`}>
+                  {user?.user_type}
+                </span>
+              </div>
+              {user?.user_type === 'guest' && (
+                <div className="info-row">
+                  <span className="label">Access Hours Used:</span>
+                  <span>{user?.access_hours_used || 0}/6 hours</span>
+                </div>
+              )}
+            </div>
+
+            {isGuest && (
+              <div className="upgrade-guest-section">
+                <h3>Upgrade to Standard Account</h3>
+                <p>Get full access to all features by setting a password</p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowPasswordForm(!showPasswordForm)}
+                >
+                  {showPasswordForm ? 'Cancel' : 'Upgrade Account'}
+                </button>
               </div>
             )}
           </div>
 
-          {isGuest && (
-            <div className="upgrade-guest-section">
-              <h3>Upgrade to Standard Account</h3>
-              <p>Get full access to all features by setting a password</p>
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowPasswordForm(!showPasswordForm)}
-              >
-                {showPasswordForm ? 'Cancel' : 'Upgrade Account'}
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="profile-card">
-          <h2>Personal Information</h2>
-          <form onSubmit={handleProfileUpdate} noValidate>
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
-            <div className="form-row">
-              <div className="form-group">
-                <label>First Name <span className="required-asterisk">*</span></label>
-                <input
-                  type="text"
-                  className="input-field"
-                  value={formData.first_name}
-                  onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                  placeholder="First Name"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Last Name <span className="required-asterisk">*</span></label>
-                <input
-                  type="text"
-                  className="input-field"
-                  value={formData.last_name}
-                  onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                  placeholder="Last Name"
-                  required
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label>Email <span className="required-asterisk">*</span></label>
-              <input
-                type="email"
-                className="input-field"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="Email Address"
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Saving...' : 'Save Changes'}
-            </button>
-          </form>
-        </div>
-
-        {showPasswordForm && isGuest && (
           <div className="profile-card">
-            <h2>Upgrade to Standard Account</h2>
-            <p className="upgrade-description">
-              Set a password to upgrade your account. Your existing information (name and email) will be kept.
-            </p>
-            <form onSubmit={handleUpgrade} noValidate>
-              <div className="form-group">
-                <label>Password <span className="required-asterisk">*</span></label>
-                <input
-                  type="password"
-                  className="input-field"
-                  value={passwordData.password}
-                  onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
-                  placeholder="Password (min 8 characters)"
-                  required
-                  minLength="8"
-                />
+            <h2>Personal Information</h2>
+            <form onSubmit={handleProfileUpdate} noValidate>
+              {error && <div className="error-message">{error}</div>}
+              {success && <div className="success-message">{success}</div>}
+              <div className="form-row">
+                <div className="form-group">
+                  <label>First Name <span className="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={formData.first_name}
+                    onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                    placeholder="First Name"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Last Name <span className="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={formData.last_name}
+                    onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                    placeholder="Last Name"
+                    required
+                  />
+                </div>
               </div>
               <div className="form-group">
-                <label>Confirm Password <span className="required-asterisk">*</span></label>
+                <label>Email <span className="required-asterisk">*</span></label>
                 <input
-                  type="password"
+                  type="email"
                   className="input-field"
-                  value={passwordData.password_confirmation}
-                  onChange={(e) => setPasswordData({ ...passwordData, password_confirmation: e.target.value })}
-                  placeholder="Confirm Password"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="Email Address"
                   required
-                  minLength="8"
                 />
               </div>
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Upgrading...' : 'Upgrade to Standard'}
+                {loading ? 'Saving...' : 'Save Changes'}
               </button>
             </form>
           </div>
-        )}
+
+          {showPasswordForm && isGuest && (
+            <div className="profile-card">
+              <h2>Upgrade to Standard Account</h2>
+              <p className="upgrade-description">
+                Set a password to upgrade your account. Your existing information (name and email) will be kept.
+              </p>
+              <form onSubmit={handleUpgrade} noValidate>
+                <div className="form-group">
+                  <label>Password <span className="required-asterisk">*</span></label>
+                  <input
+                    type="password"
+                    className="input-field"
+                    value={passwordData.password}
+                    onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                    placeholder="Password (min 8 characters)"
+                    required
+                    minLength="8"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Confirm Password <span className="required-asterisk">*</span></label>
+                  <input
+                    type="password"
+                    className="input-field"
+                    value={passwordData.password_confirmation}
+                    onChange={(e) => setPasswordData({ ...passwordData, password_confirmation: e.target.value })}
+                    placeholder="Confirm Password"
+                    required
+                    minLength="8"
+                  />
+                </div>
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? 'Upgrading...' : 'Upgrade to Standard'}
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

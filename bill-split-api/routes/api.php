@@ -27,6 +27,7 @@ Route::post('/email/verify/resend', [EmailVerificationController::class, 'resend
 // Guest access - verify invitation code and check email
 Route::post('/verify-invitation', [InvitationController::class, 'verifyCode']);
 Route::post('/guest/check-email', [InvitationController::class, 'checkEmail']);
+Route::post('/check-username', [UserController::class, 'checkUsername']);
 
 // Protected routes
 // Note: Add 'verified' middleware to routes that require email verification

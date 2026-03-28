@@ -43,6 +43,19 @@ class UserController extends Controller
         ]);
     }
 
+    public function checkUsername(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string',
+        ]);
+
+        $exists = User::where('username', $request->username)->exists();
+
+        return response()->json([
+            'exists' => $exists,
+        ]);
+    }
+
     public function upgradeToPremium(Request $request)
     {
         $request->validate([

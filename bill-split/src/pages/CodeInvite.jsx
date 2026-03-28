@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { invitationAPI, billAPI } from "../services/api";
+import { invitationAPI, billAPI, userAPI } from "../services/api";
 import "./CodeInvite.css";
 
 function CodeInvite() {
@@ -10,7 +10,7 @@ function CodeInvite() {
   const { login } = useAuth();
   const [step, setStep] = useState(1);
   const [loginFormData, setLoginFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const [invitationCode, setInvitationCode] = useState("");
@@ -59,14 +59,48 @@ function CodeInvite() {
     }));
   };
 
+  const validateUsername = (value) => {
+    if (!value || value.trim() === "") {
+      return "Username is required";
+    }
+    return "";
+  };
+
+  const checkUsernameExists = async (username) => {
+    try {
+      const response = await userAPI.checkUsername({ username });
+      if (!response.data.exists) {
+        return "Username does not exist";
+      }
+      return "";
+    } catch (err) {
+      return err.response?.data?.message || "Failed to verify username";
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+
+    const usernameError = validateUsername(loginFormData.username);
+    if (usernameError) {
+      setError(usernameError);
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Login the user
-      await login(loginFormData.email, loginFormData.password);
+      // Check if username exists in database
+      const usernameExists = await checkUsernameExists(loginFormData.username);
+      if (usernameExists) {
+        setLoading(false);
+        setError(usernameExists);
+        return;
+      }
+
+      // Login the user with username
+      await login(loginFormData.username, loginFormData.password);
       
       // Join the bill with the invitation code
       const response = await billAPI.joinWithCode({
@@ -176,13 +210,13 @@ function CodeInvite() {
                   {error && <div className="error-message">{error}</div>}
 
                   <div className="form-group">
-                    <label>Email Address <span className="required-asterisk">*</span></label>
+                    <label>Username <span className="required-asterisk">*</span></label>
                     <input
-                      type="email"
-                      name="email"
+                      type="text"
+                      name="username"
                       className="input-field"
-                      placeholder="Enter your email"
-                      value={loginFormData.email}
+                      placeholder="Enter your username"
+                      value={loginFormData.username}
                       onChange={handleLoginInputChange}
                       required
                       disabled={loading}

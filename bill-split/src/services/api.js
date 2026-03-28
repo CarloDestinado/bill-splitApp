@@ -37,6 +37,7 @@ export const authAPI = {
   register: (data) => api.post('/register', data),
   login: (data) => api.post('/login', data),
   logout: () => api.post('/logout'),
+  registerGuestDirect: (data) => api.post('/guest/register', data),
   registerGuest: (data) => api.post('/guest/register-with-code', data),
   loginGuest: (data) => api.post('/guest/login', data),
   upgradeToRegistered: (data) => api.post('/upgrade-account', data),
@@ -50,6 +51,7 @@ export const userAPI = {
   getProfile: () => api.get('/user'),
   updateProfile: (data) => api.put('/user/update', data),
   upgradeToPremium: (data) => api.post('/user/upgrade-premium', data),
+  checkUsername: (data) => api.post('/check-username', data),
 };
 
 // Bill APIs

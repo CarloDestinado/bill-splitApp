@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { invitationAPI } from '../services/api';
+import { invitationAPI, userAPI } from '../services/api';
 import './GuestRegister.css';
 
 function GuestRegister() {
@@ -12,7 +12,7 @@ function GuestRegister() {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
-    email: '',
+    username: '',
   });
   const [bill, setBill] = useState(null);
   const [error, setError] = useState('');
@@ -48,18 +48,56 @@ function GuestRegister() {
     }
   };
 
+  const validateUsername = (value) => {
+    if (!value || value.trim() === "") {
+      return "Username is required";
+    }
+    return "";
+  };
+
+  const checkUsernameExists = async (username) => {
+    try {
+      const response = await userAPI.checkUsername({ username });
+      if (response.data.exists) {
+        return "Username already exists";
+      }
+      return "";
+    } catch (err) {
+      return "";
+    }
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+
+    const usernameError = validateUsername(formData.username);
+    if (usernameError) {
+      setError(usernameError);
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // Check if username is already taken
+      const usernameTaken = await checkUsernameExists(formData.username);
+      if (usernameTaken) {
+        setLoading(false);
+        setError(usernameTaken);
+        return;
+      }
+
       // Register as guest
       await guestRegister(formData);
 
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      const errorMsg = err.response?.data?.message || 'Registration failed';
+      // Filter out email field errors since we removed email from guest registration
+      if (!errorMsg.includes('email')) {
+        setError(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -124,16 +162,16 @@ function GuestRegister() {
             </div>
 
             <div className="form-group">
-              <label>Email Address <span className="required-asterisk">*</span></label>
+              <label>Username <span className="required-asterisk">*</span></label>
               <input
-                type="email"
+                type="text"
                 className="input-field"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="Email Address"
+                value={formData.username}
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                placeholder="Username"
                 required
               />
-              <p className="field-help">Enter your email to access the bill</p>
+              <p className="field-help">Username must exist in the system</p>
             </div>
 
             <button type="submit" className="btn btn-primary btn-full" disabled={loading}>

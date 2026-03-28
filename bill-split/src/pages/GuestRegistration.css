@@ -1,13 +1,13 @@
 /* Guest Registration Page - Modern Design */
 .guest-registration-page {
-  min-height: 100vh;
+  height: 100vh;
   background: var(--gradient-primary);
-  padding: 2rem;
+  padding: 2rem 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .guest-registration-page::before {
@@ -15,8 +15,8 @@
   position: absolute;
   top: -50%;
   left: -50%;
-  width: 200%;
-  height: 200%;
+  width: 100%;
+  height: 100%;
   background:
     radial-gradient(
       circle at 20% 80%,
@@ -42,11 +42,12 @@
 }
 
 .guest-registration-container {
-  width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   gap: 2rem;
+  margin-top: 50px;
+  padding: 50px 50px;
   position: relative;
   z-index: 1;
 }
@@ -55,9 +56,12 @@
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
-  padding: 2.5rem;
+  padding: 2rem 3.5rem 2rem 3.5rem;
   box-shadow: var(--shadow-2xl);
   border: 1px solid rgba(255, 255, 255, 0.5);
+  min-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .login-header {
@@ -179,32 +183,34 @@
 .form-group label {
   display: block;
   font-weight: 600;
-  color: var(--slate-700);
+  color: var(--gray-700);
   font-size: 0.95rem;
 }
 
 .input-field {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid var(--slate-200);
+  border: 2px solid var(--gray-300);
   border-radius: var(--radius-lg);
   font-size: 1rem;
   font-family: inherit;
   transition: all var(--transition-base);
-  color: var(--slate-800);
+  color: var(--gray-800);
   background: white;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .input-field:focus {
-  outline: none;
-  border-color: var(--primary-500);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+  outline: 1px solid var(--gray-300);
+  outline-offset: 1px;
+  border-color: var(--gray-300);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .input-field:disabled {
-  background-color: var(--slate-50);
+  background-color: var(--gray-50);
   cursor: not-allowed;
-  color: var(--slate-500);
+  color: var(--gray-500);
 }
 
 .guest-registration-input {
@@ -317,6 +323,7 @@
   box-shadow: var(--shadow-xl);
   border: 1px solid rgba(255, 255, 255, 0.5);
   height: fit-content;
+  min-width: 600px;
 }
 
 .guest-registration-info-panel h2 {

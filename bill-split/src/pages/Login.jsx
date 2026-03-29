@@ -53,7 +53,7 @@ function Login() {
       setSuccessMessage("Verification email sent! Please check your inbox.");
     } catch (err) {
       setError(
-        err.response?.data?.message || "Failed to resend verification email."
+        err.response?.data?.message || "Failed to resend verification email.",
       );
     } finally {
       setLoading(false);
@@ -122,7 +122,9 @@ function Login() {
 
           <form className="login-form" onSubmit={handleSubmit} noValidate>
             <div className="input-group">
-              <label className="input-label">Email <span className="required-asterisk">*</span></label>
+              <label className="input-label">
+                Email <span className="required-asterisk">*</span>
+              </label>
               <input
                 type="email"
                 placeholder="Email"
@@ -140,7 +142,9 @@ function Login() {
             </div>
             <div className="input-group">
               <div className="password-field">
-                <label className="input-label">Password <span className="required-asterisk">*</span></label>
+                <label className="input-label">
+                  Password <span className="required-asterisk">*</span>
+                </label>
                 <input
                   type="password"
                   placeholder="Password"
@@ -181,7 +185,7 @@ function Login() {
               onClick={() => navigate("/guest/login")}
               disabled={loading}
             >
-              Login as Guest
+              Rejoin as Guest
             </button>
           </form>
 

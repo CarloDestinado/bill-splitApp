@@ -23,7 +23,7 @@ function Dashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
-  const [filter, setFilter] = useState('all'); // 'all', 'created', 'joined'
+  const [filter, setFilter] = useState("all"); // 'all', 'created', 'joined'
 
   useEffect(() => {
     loadBills();
@@ -33,7 +33,7 @@ function Dashboard() {
   useEffect(() => {
     if (isGuest && !isPremium && remainingAccessHours <= 0) {
       logout();
-      navigate('/login');
+      navigate("/login");
     }
   }, [isGuest, isPremium, remainingAccessHours, logout, navigate]);
 
@@ -75,7 +75,9 @@ function Dashboard() {
     try {
       const response = await billAPI.getAll();
       // Filter out completed (Done/Paid) bills
-      const activeBills = response.data.bills.filter(bill => bill.status !== 'completed');
+      const activeBills = response.data.bills.filter(
+        (bill) => bill.status !== "completed",
+      );
       setBills(activeBills);
     } catch (error) {
       console.error("Failed to load bills:", error);
@@ -86,10 +88,10 @@ function Dashboard() {
 
   // Filter bills based on ownership
   const filteredBills = bills.filter((bill) => {
-    if (filter === 'created') {
+    if (filter === "created") {
       return bill.created_by === user?.id;
     }
-    if (filter === 'joined') {
+    if (filter === "joined") {
       return bill.created_by !== user?.id;
     }
     return true; // 'all' shows everything
@@ -177,20 +179,20 @@ function Dashboard() {
 
           <div className="bill-filter-tabs">
             <button
-              className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
-              onClick={() => setFilter('all')}
+              className={`filter-tab ${filter === "all" ? "active" : ""}`}
+              onClick={() => setFilter("all")}
             >
               All Bills
             </button>
             <button
-              className={`filter-tab ${filter === 'created' ? 'active' : ''}`}
-              onClick={() => setFilter('created')}
+              className={`filter-tab ${filter === "created" ? "active" : ""}`}
+              onClick={() => setFilter("created")}
             >
               My Bills
             </button>
             <button
-              className={`filter-tab ${filter === 'joined' ? 'active' : ''}`}
-              onClick={() => setFilter('joined')}
+              className={`filter-tab ${filter === "joined" ? "active" : ""}`}
+              onClick={() => setFilter("joined")}
             >
               Joined Bills
             </button>
@@ -199,10 +201,9 @@ function Dashboard() {
           {isGuest && !isPremium && (
             <div className="guest-notice">
               <p>
-                ⚠️ Guest users have limited access ({Math.floor(remainingAccessHours)} hours
-                remaining today).
-                <Link to="/upgrade"> Upgrade to Standard</Link> for full
-                access.
+                ⚠️ Guest users have limited access (
+                {Math.floor(remainingAccessHours)} hours remaining today).
+                <Link to="/upgrade"> Upgrade to Standard</Link> for full access.
               </p>
             </div>
           )}
@@ -222,9 +223,13 @@ function Dashboard() {
             <div className="loading">Loading bills...</div>
           ) : filteredBills.length === 0 ? (
             <div className="empty-state">
-              {filter === 'all' && <p>No bills yet. Create your first bill to get started!</p>}
-              {filter === 'created' && <p>You haven't created any bills yet.</p>}
-              {filter === 'joined' && <p>You haven't joined any bills yet.</p>}
+              {filter === "all" && (
+                <p>No bills yet. Create your first bill to get started!</p>
+              )}
+              {filter === "created" && (
+                <p>You haven't created any bills yet.</p>
+              )}
+              {filter === "joined" && <p>You haven't joined any bills yet.</p>}
             </div>
           ) : (
             <div className="bills-grid">
@@ -333,7 +338,9 @@ function CreateBillModal({ onClose, onCreated }) {
         <form onSubmit={handleSubmit} noValidate>
           {error && <div className="error-message">{error}</div>}
           <div className="form-group">
-            <label>Bill Title <span className="required-asterisk">*</span></label>
+            <label>
+              Bill Title <span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               className="input-field"
@@ -346,7 +353,9 @@ function CreateBillModal({ onClose, onCreated }) {
             />
           </div>
           <div className="form-group">
-            <label>Total Amount <span className="required-asterisk">*</span></label>
+            <label>
+              Total Amount <span className="required-asterisk">*</span>
+            </label>
             <input
               type="number"
               step="0.01"
@@ -414,6 +423,16 @@ function InviteModal({ bill, onClose }) {
         </div>
 
         <div className="invite-content">
+          {/* <div className="invite-section">
+            <h3>Invite </h3>
+            <div className="code-display">
+              <code>{invitationCode}</code>
+              <button className="btn btn-sm" onClick={copyCode}>
+                Copy
+              </button>
+            </div>
+          </div> */}
+
           <div className="invite-section">
             <h3>Invitation Code</h3>
             <div className="code-display">

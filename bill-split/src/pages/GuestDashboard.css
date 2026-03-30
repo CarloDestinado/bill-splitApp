@@ -1,5 +1,5 @@
-/* Guest Registration Page - Modern Design */
-.guest-registration-page {
+/* Guest Dashboard Page - Modern Design */
+.guest-dashboard-page {
   height: 100vh;
   background: var(--gradient-primary);
   padding: 2rem 0;
@@ -10,7 +10,7 @@
   overflow: auto;
 }
 
-.guest-registration-page::before {
+.guest-dashboard-page::before {
   content: "";
   position: absolute;
   top: -50%;
@@ -41,7 +41,7 @@
   }
 }
 
-.guest-registration-container {
+.guest-dashboard-container {
   max-width: 1200px;
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -52,7 +52,7 @@
   z-index: 1;
 }
 
-.guest-registration-card {
+.guest-dashboard-card {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
@@ -213,7 +213,7 @@
   color: var(--gray-500);
 }
 
-.guest-registration-input {
+.guest-dashboard-input {
   font-family: "SF Mono", Monaco, monospace;
   font-size: 1.5rem;
   font-weight: 700;
@@ -315,7 +315,7 @@
   text-decoration: underline;
 }
 
-.guest-registration-info-panel {
+.guest-dashboard-info-panel {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
@@ -326,7 +326,7 @@
   min-width: 600px;
 }
 
-.guest-registration-info-panel h2 {
+.guest-dashboard-info-panel h2 {
   font-size: 1.5rem;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
@@ -429,21 +429,21 @@
 }
 
 @media (max-width: 900px) {
-  .guest-registration-container {
+  .guest-dashboard-container {
     grid-template-columns: 1fr;
   }
 
-  .guest-registration-info-panel {
+  .guest-dashboard-info-panel {
     display: none;
   }
 }
 
 @media (max-width: 768px) {
-  .guest-registration-page {
+  .guest-dashboard-page {
     padding: 1rem;
   }
 
-  .guest-registration-card {
+  .guest-dashboard-card {
     padding: 2rem 1.5rem;
   }
 
@@ -465,4 +465,27 @@
   color: #ef4444;
   font-weight: 700;
   margin-left: 0.25rem;
+}
+
+/* Guest Welcome View (for existing users) */
+.guest-welcome-view {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.guest-welcome-view h3 {
+  font-size: 1.5rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+}
+
+.welcome-description {
+  color: var(--slate-600);
+  font-size: 1rem;
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
 }

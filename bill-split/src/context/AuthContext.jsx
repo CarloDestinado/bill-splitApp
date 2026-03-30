@@ -116,8 +116,8 @@ const AuthProvider = ({ children }) => {
     return { user, token, bill: bill || null };
   };
 
-  const guestLogin = async ({ username }) => {
-    const response = await authAPI.loginGuest({ username });
+  const guestLogin = async ({ email, invitation_code }) => {
+    const response = await authAPI.loginGuest({ email, invitation_code });
     const { user, token } = response.data;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));

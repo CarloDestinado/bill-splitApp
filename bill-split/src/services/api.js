@@ -51,7 +51,6 @@ export const userAPI = {
   getProfile: () => api.get('/user'),
   updateProfile: (data) => api.put('/user/update', data),
   upgradeToPremium: (data) => api.post('/user/upgrade-premium', data),
-  checkUsername: (data) => api.post('/check-username', data),
 };
 
 // Bill APIs

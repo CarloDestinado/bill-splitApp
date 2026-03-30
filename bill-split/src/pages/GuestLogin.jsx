@@ -1,68 +1,75 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { userAPI } from "../services/api";
+import { authAPI } from "../services/api";
 import "./GuestLogin.css";
 
 function GuestLogin() {
-  const [username, setUsername] = useState("");
+  const [invitationCode, setInvitationCode] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { guestLogin } = useAuth();
   const navigate = useNavigate();
 
-  const validateUsername = (value) => {
-    if (!value || value.trim() === "") {
-      return "The username field is required.";
-    }
-    // Optionally add more validation here (e.g., min/max length, allowed chars)
-    return "";
-  };
+  const validateForm = () => {
+    const newErrors = {};
 
-  const checkUsernameExists = async (username) => {
-    try {
-      const response = await userAPI.checkUsername({ username });
-      if (!response.data.exists) {
-        return "Username does not exist";
-      }
-      return "";
-    } catch (err) {
-      return err.response?.data?.message || "Failed to verify username";
+    if (!invitationCode || invitationCode.trim() === "") {
+      newErrors.invitationCode = "Invitation code is required";
     }
+
+    if (!email || email.trim() === "") {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    const usernameError = validateUsername(username);
-    if (usernameError) {
-      setError(usernameError);
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setError(Object.values(errors)[0]);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Check if username exists in database
-      const usernameExists = await checkUsernameExists(username);
-      if (usernameExists) {
-        setLoading(false);
-        setError(usernameExists);
-        return;
-      }
+      // Call the unified guest login endpoint
+      const response = await authAPI.loginGuest({ email, invitation_code: invitationCode });
+      const { action, message, user, token, bill } = response.data;
 
-      await guestLogin({ username });
-      navigate("/dashboard");
-    } catch (err) {
-      // Laravel returns validation errors in err.response.data.errors
-      const errorMessage = err.response?.data?.message || "Guest login failed. Please try again.";
-      let usernameError = errorMessage;
-      if (err.response?.data?.errors?.username) {
-        // Laravel validation error for username field
-        usernameError = err.response.data.errors.username[0];
+      // Handle different actions based on backend response
+      if (action === 'login_success') {
+        // Store auth data
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Navigate to guest dashboard (works for both guest and registered users)
+        navigate("/guest/dashboard", {
+          state: {
+            invitationCode,
+            email,
+            bill
+          }
+        });
+      } else if (action === 'redirect_to_registration') {
+        // Email doesn't exist - redirect to guest registration
+        navigate("/guest/registration", {
+          state: {
+            invitationCode,
+            email,
+            bill
+          }
+        });
       }
-      setError(usernameError);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "Failed to join bill. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -73,9 +80,9 @@ function GuestLogin() {
       <div className="guest-login-container">
         <div className="guest-login-card">
           <div className="login-header">
-            <h1>Login as Guest</h1>
+            <h1>Join Bill</h1>
             <p>
-              Enter your username to access your guest account
+              Enter your invitation code and email to access the bill
             </p>
           </div>
 
@@ -83,18 +90,36 @@ function GuestLogin() {
             {error && <div className="error-message">{error}</div>}
 
             <div className="form-group">
-              <label>Username <span className="required-asterisk">*</span></label>
+              <label>Invitation Code <span className="required-asterisk">*</span></label>
               <input
                 type="text"
                 className="input-field"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter invitation code"
+                value={invitationCode}
+                onChange={(e) => setInvitationCode(e.target.value.toUpperCase())}
+                required
+                disabled={loading}
+                autoComplete="off"
+                maxLength={8}
+              />
+              <p className="field-help">
+                Enter the 8-character code from your bill invitation
+              </p>
+            </div>
+
+            <div className="form-group">
+              <label>Email <span className="required-asterisk">*</span></label>
+              <input
+                type="email"
+                className="input-field"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={loading}
               />
               <p className="field-help">
-                Username must exist in the system
+                Email used to join the bill
               </p>
             </div>
 
@@ -103,14 +128,11 @@ function GuestLogin() {
               className="btn btn-primary btn-full"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Login as Guest"}
+              {loading ? "Checking..." : "Join Bill"}
             </button>
           </form>
 
           <div className="login-footer">
-            <p>
-              Don't have an account? <Link to="/guest/registration">Access bill via invitation code</Link>
-            </p>
             <p>
               Already have an account? <Link to="/login">Login here</Link>
             </p>

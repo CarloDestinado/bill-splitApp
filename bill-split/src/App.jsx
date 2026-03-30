@@ -8,6 +8,7 @@ import GuestRegister from './pages/GuestRegister';
 import GuestBillSearch from './pages/GuestBillSearch';
 import GuestLogin from './pages/GuestLogin';
 import GuestRegistration from './pages/GuestRegistration';
+import GuestDashboard from './pages/GuestDashboard';
 import CodeInvite from './pages/CodeInvite';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
@@ -97,6 +98,14 @@ function AppRoutes() {
           element={
             <PublicRoute>
               <GuestRegistration />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/guest/dashboard"
+          element={
+            <PublicRoute>
+              <GuestDashboard />
             </PublicRoute>
           }
         />

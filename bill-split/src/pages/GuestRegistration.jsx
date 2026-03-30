@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { invitationAPI, userAPI } from "../services/api";
+import { invitationAPI } from "../services/api";
 import "./GuestRegistration.css";
 
 function GuestRegistration() {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { guestRegister } = useAuth();
   const [step, setStep] = useState(1);
@@ -14,6 +14,7 @@ function GuestRegistration() {
     last_name: "",
     username: "",
     nickname: "",
+    email: "",
   });
   const [invitationCode, setInvitationCode] = useState("");
   const [bill, setBill] = useState(null);
@@ -21,12 +22,17 @@ function GuestRegistration() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const codeFromUrl = searchParams.get("code");
-    if (codeFromUrl) {
-      setInvitationCode(codeFromUrl);
-      verifyCode(codeFromUrl);
+    // Check if coming from GuestLogin with pre-filled data
+    if (location.state?.invitationCode && location.state?.email) {
+      setInvitationCode(location.state.invitationCode);
+      setFormData(prev => ({
+        ...prev,
+        email: location.state.email,
+      }));
+      setBill(location.state.bill);
+      setStep(2); // Skip to registration form
     }
-  }, [searchParams]);
+  }, [location.state]);
 
   const verifyCode = async (code) => {
     setError("");
@@ -38,7 +44,7 @@ function GuestRegistration() {
         invitation_code: code.toUpperCase(),
       });
       console.log("Verification response:", response.data);
-      
+
       if (response.data.valid) {
         setBill(response.data.bill);
         setStep(2);
@@ -53,48 +59,53 @@ function GuestRegistration() {
     }
   };
 
-  const validateUsername = (value) => {
-    if (!value || value.trim() === "") {
-      return "Username is required";
-    }
-    return "";
-  };
+  const validateForm = () => {
+    const errors = {};
 
-  const checkUsernameExists = async (username) => {
-    try {
-      const response = await userAPI.checkUsername({ username });
-      if (response.data.exists) {
-        return "Username already exists";
-      }
-      return "";
-    } catch (err) {
-      return "";
+    if (!formData.first_name || formData.first_name.trim() === "") {
+      errors.first_name = "First name is required";
     }
+
+    if (!formData.last_name || formData.last_name.trim() === "") {
+      errors.last_name = "Last name is required";
+    }
+
+    if (!formData.username || formData.username.trim() === "") {
+      errors.username = "Username is required";
+    }
+
+    if (!formData.nickname || formData.nickname.trim() === "") {
+      errors.nickname = "Nickname is required";
+    }
+
+    if (!formData.email || formData.email.trim() === "") {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Please enter a valid email address";
+    }
+
+    return errors;
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
 
-    const usernameError = validateUsername(formData.username);
-    if (usernameError) {
-      setError(usernameError);
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setError(Object.values(errors)[0]);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Check if username is already taken
-      const usernameTaken = await checkUsernameExists(formData.username);
-      if (usernameTaken) {
-        setLoading(false);
-        setError(usernameTaken);
-        return;
-      }
-
       const guestData = {
-        ...formData,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        username: formData.username,
+        nickname: formData.nickname,
+        email: formData.email,
         invitation_code: invitationCode.toUpperCase(),
       };
 
@@ -105,7 +116,6 @@ function GuestRegistration() {
 
       console.log("Registration result:", result);
       console.log("Bill data:", billData);
-      console.log("Bill from state:", bill);
 
       // Navigate to the bill page
       if (billData && billData.id) {
@@ -121,20 +131,11 @@ function GuestRegistration() {
       console.error("Registration error:", err);
       const errors = err.response?.data?.errors;
       if (errors) {
-        // Filter out email errors
-        const filteredErrors = Object.entries(errors).filter(
-          ([key]) => !key.toLowerCase().includes('email')
-        );
-        if (filteredErrors.length > 0) {
-          const firstError = Object.values(filteredErrors[0])[0];
-          setError(Array.isArray(firstError) ? firstError[0] : firstError);
-        }
+        const firstError = Object.values(errors)[0];
+        setError(Array.isArray(firstError) ? firstError[0] : firstError);
       } else {
         const errorMsg = err.response?.data?.message || "Registration failed. Please try again.";
-        // Filter out email errors too
-        if (!errorMsg.toLowerCase().includes('email')) {
-          setError(errorMsg);
-        }
+        setError(errorMsg);
       }
     } finally {
       setLoading(false);
@@ -156,7 +157,7 @@ function GuestRegistration() {
           <div className="login-header">
             <h1>Access Bill via Invitation Code</h1>
             <p>
-              Enter the invitation code and your details to view the shared bill
+              Enter your details to create a guest account and view the bill
             </p>
           </div>
 
@@ -233,6 +234,23 @@ function GuestRegistration() {
               <form onSubmit={handleRegister} noValidate>
                 {error && <div className="error-message">{error}</div>}
 
+                <div className="form-group">
+                  <label>Email <span className="required-asterisk">*</span></label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="input-field"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Email"
+                    required
+                    disabled={loading}
+                  />
+                  <p className="field-help">
+                    This email will be used for login
+                  </p>
+                </div>
+
                 <div className="form-row">
                   <div className="form-group">
                     <label>First Name <span className="required-asterisk">*</span></label>
@@ -293,16 +311,6 @@ function GuestRegistration() {
                   </p>
                 </div>
 
-                <div className="form-group">
-                  <label>Invitation Code</label>
-                  <input
-                    type="text"
-                    className="input-field"
-                    value={invitationCode}
-                    disabled
-                  />
-                </div>
-
                 <div className="form-actions">
                   <button
                     type="button"
@@ -350,7 +358,7 @@ function GuestRegistration() {
             <li>
               <strong>Enter Your Details</strong>
               <p>
-                Provide your name, email, and nickname to create a guest account
+                Provide your name, email, username, and nickname to create a guest account
               </p>
             </li>
             <li>

@@ -130,10 +130,13 @@ class AuthController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
-            'nickname' => 'required|string|max:255',
+            'nickname' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
             'invitation_code' => 'required|string',
         ], [
             'username.unique' => 'This username has already been taken.',
+            'nickname.unique' => 'This nickname has already been taken.',
+            'email.unique' => 'This email address has already been registered.',
         ]);
 
         // Verify the invitation code first
@@ -151,7 +154,7 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'nickname' => $request->nickname,
             'username' => $request->username,
-            'email' => null,
+            'email' => $request->email,
             'user_type' => 'guest',
             'account_type' => 'standard',
             'access_reset_at' => now(),
@@ -195,29 +198,45 @@ class AuthController extends Controller
     public function loginGuest(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
+            'email' => 'required|email',
+            'invitation_code' => 'required|string',
         ]);
 
-        // First check if user exists at all
-        $user = User::where('username', $request->username)->first();
+        // First verify the invitation code
+        $bill = \App\Models\Bill::where('invitation_code', strtoupper($request->invitation_code))
+            ->first();
+
+        if (! $bill) {
+            throw ValidationException::withMessages([
+                'invitation_code' => ['Invalid invitation code. Please check the code and try again.'],
+            ]);
+        }
+
+        // Check if email exists
+        $user = User::where('email', $request->email)->first();
 
         if (! $user) {
-            throw ValidationException::withMessages([
-                'username' => ['No account found with this username. Please register first.'],
-            ]);
+            // Email doesn't exist - redirect to registration
+            return response()->json([
+                'action' => 'redirect_to_registration',
+                'message' => 'Email not found. Please register to access this bill.',
+                'bill' => [
+                    'id' => $bill->id,
+                    'title' => $bill->title,
+                    'total_amount' => $bill->total_amount,
+                    'description' => $bill->description ?? '',
+                    'status' => $bill->status ?? 'active',
+                    'invitation_code' => $bill->invitation_code,
+                ],
+            ], 200);
         }
 
-        // Check if the account is a guest account
-        if ($user->user_type !== 'guest') {
-            throw ValidationException::withMessages([
-                'username' => ['This is not a guest account. Please use the regular login instead.'],
-            ]);
-        }
-
+        // Email exists - auto-login the user (guest or registered)
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Guest login successful',
+            'action' => 'login_success',
+            'message' => 'Login successful',
             'user' => $user,
             'token' => $token,
         ]);

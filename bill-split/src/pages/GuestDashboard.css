@@ -10,7 +10,22 @@
   overflow: auto;
 }
 
-.guest-dashboard-page::before {
+.guest-dashboard {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.guest-dashboard > .dashboard-content {
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+}
+
+.guest-dashboard::before {
   content: "";
   position: absolute;
   top: -50%;
@@ -488,4 +503,621 @@
   font-size: 1rem;
   margin: 0 0 2rem 0;
   line-height: 1.6;
+}
+
+/* ===== Dashboard Header ===== */
+.dashboard-header {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.logout-btn {
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.logout-btn:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-400);
+}
+
+.register-btn {
+  padding: 0.625rem 1.25rem;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* ===== Dashboard Main Content ===== */
+.dashboard-main {
+  flex: 1;
+  padding: 2rem;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.dashboard-content {
+  width: 100% !important;
+  max-width: 1400px;
+  min-width: 320px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-2xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  flex: 1;
+}
+
+/* Override Dashboard.css when inside guest-dashboard */
+.guest-dashboard .dashboard-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0;
+  flex: 1;
+}
+
+/* ===== Bill Detail Stack ===== */
+.bill-detail-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ===== Joined Bill Card ===== */
+.joined-bill {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 2px solid #86efac;
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.15);
+}
+
+.joined-bill.guest-view {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #fcd34d;
+}
+
+.bill-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.bill-title-section h1 {
+  font-size: 1.875rem;
+  color: var(--gray-800);
+  margin: 0;
+  font-weight: 700;
+}
+
+.status {
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.completed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status.archived {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.bill-total {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: var(--primary-600);
+  margin: 1rem 0;
+}
+
+.bill-description {
+  color: var(--gray-600);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+.bill-due {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.bill-code {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+
+.bill-code code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  font-family: "SF Mono", Monaco, monospace;
+  font-weight: 600;
+  color: var(--primary-700);
+}
+
+/* ===== Users Card ===== */
+.users-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.users-card h2 {
+  font-size: 1.25rem;
+  color: var(--gray-800);
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+}
+
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-100);
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.creator-badge,
+.guest-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.creator-badge {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.guest-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.user-share {
+  font-weight: 700;
+  font-size: 1.125rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: var(--primary-600);
+}
+
+.no-users {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* ===== Guest Access Notice ===== */
+.guest-access-notice {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-left: 4px solid #f59e0b;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+}
+
+.guest-access-notice p {
+  margin: 0;
+  color: #92400e;
+  font-size: 0.9rem;
+}
+
+.time-remaining-badge {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.view-only-notice {
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1rem;
+  text-align: center;
+}
+
+.view-only-notice {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ===== Guest Upgrade Prompt ===== */
+.guest-upgrade-prompt {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 2px solid #86efac;
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  text-align: center;
+}
+
+.guest-upgrade-prompt h3 {
+  font-size: 1.25rem;
+  color: var(--gray-800);
+  margin: 0 0 0.75rem 0;
+  font-weight: 700;
+}
+
+.guest-upgrade-prompt > p {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem 0;
+}
+
+/* ===== Error State ===== */
+.error-state {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.error-state p {
+  color: var(--gray-600);
+  font-size: 1rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.access-limit-error {
+  color: #dc2626;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem !important;
+}
+
+.access-limit-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== Loading ===== */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray-500);
+  font-size: 1rem;
+}
+
+/* ===== Access Limit Notice ===== */
+.access-limit-notice {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.access-limit-notice h1 {
+  font-size: 1.5rem;
+  color: var(--gray-800);
+  margin: 0 0 1rem 0;
+}
+
+.access-limit-notice p {
+  color: var(--gray-600);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+/* ===== Modal Overlay ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: white;
+  border-radius: var(--radius-2xl);
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-2xl);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  color: var(--gray-800);
+  margin: 0;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--gray-400);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
+}
+
+.close-btn:hover {
+  background: var(--gray-100);
+  color: var(--gray-600);
+}
+
+.modal-content {
+  margin-bottom: 1.5rem;
+}
+
+.modal-description {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.password-requirements {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+}
+
+.password-requirements li {
+  color: var(--gray-600);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.password-requirements li:last-child {
+  margin-bottom: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* ===== Form Group ===== */
+.form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 0.95rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all var(--transition-base);
+  color: var(--gray-800);
+  background: white;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.input-field:focus {
+  outline: 1px solid var(--gray-300);
+  outline-offset: 1px;
+  border-color: var(--gray-300);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.input-field:disabled {
+  background-color: var(--gray-50);
+  cursor: not-allowed;
+  color: var(--gray-500);
+}
+
+/* ===== Error Message ===== */
+.error-message {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #dc2626;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  border: 1px solid #fecaca;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-secondary {
+  background-color: var(--slate-100);
+  color: var(--slate-700);
+  border: 1px solid var(--slate-200);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--slate-200);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== Links ===== */
+a {
+  color: var(--primary-600);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Inline Button ===== */
+.inline-btn {
+  background: none;
+  border: none;
+  color: var(--primary-600);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.inline-btn:hover {
+  color: var(--primary-700);
 }

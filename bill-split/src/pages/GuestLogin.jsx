@@ -39,24 +39,36 @@ function GuestLogin() {
     setLoading(true);
 
     try {
+      console.log("=== GuestLogin Submit ===");
+      console.log("Email:", email);
+      console.log("Invitation Code:", invitationCode);
+      
       // Call the unified guest login endpoint
       const response = await authAPI.loginGuest({ email, invitation_code: invitationCode });
+      console.log("=== Backend Response ===");
+      console.log("Response data:", response.data);
       const { action, message, user, token, bill } = response.data;
 
       // Handle different actions based on backend response
       if (action === 'login_success') {
+        console.log("=== Login Success ===");
+        console.log("Token:", token ? token.substring(0, 20) + "..." : "NO TOKEN");
+        console.log("User:", user);
+        console.log("Bill:", bill);
+        
         // Store auth data
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
-        
-        // Navigate to guest dashboard (works for both guest and registered users)
-        navigate("/guest/dashboard", {
-          state: {
-            invitationCode,
-            email,
-            bill
-          }
-        });
+        console.log("Stored token in localStorage:", localStorage.getItem('token') ? "YES" : "NO");
+
+        // Navigate to guest dashboard with specific bill ID
+        if (bill && bill.id) {
+          console.log("Navigating to: /guest/dashboard/" + bill.id);
+          navigate(`/guest/dashboard/${bill.id}`);
+        } else {
+          console.log("No bill.id - fallback to search");
+          navigate('/guest/search');
+        }
       } else if (action === 'redirect_to_registration') {
         // Email doesn't exist - redirect to guest registration
         navigate("/guest/registration", {

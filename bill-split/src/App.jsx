@@ -110,6 +110,14 @@ function AppRoutes() {
           }
         />
         <Route
+          path="/guest/dashboard/:billId"
+          element={
+            <PublicRoute>
+              <GuestDashboard />
+            </PublicRoute>
+          }
+        />
+        <Route
           path="/guest/register/:code"
           element={
             <PublicRoute>

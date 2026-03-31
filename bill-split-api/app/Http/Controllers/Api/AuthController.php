@@ -234,11 +234,43 @@ class AuthController extends Controller
         // Email exists - auto-login the user (guest or registered)
         $token = $user->createToken('auth-token')->plainTextToken;
 
+        // Check if user is already in the bill, if not add them
+        $billUser = \App\Models\BillUser::where('bill_id', $bill->id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$billUser) {
+            // Add user to the bill
+            $currentUsers = $bill->users()->count();
+            $totalUsers = max($currentUsers + 1, 1); // At least 1 to avoid division by zero
+            $shareAmount = $bill->total_amount / $totalUsers;
+
+            \App\Models\BillUser::create([
+                'bill_id' => $bill->id,
+                'user_id' => $user->id,
+                'share_amount' => $shareAmount,
+                'payment_status' => 'pending',
+            ]);
+
+            // Recalculate share amounts for all existing users
+            foreach ($bill->billUsers as $billUser) {
+                $billUser->update(['share_amount' => $shareAmount]);
+            }
+        }
+
         return response()->json([
             'action' => 'login_success',
             'message' => 'Login successful',
             'user' => $user,
             'token' => $token,
+            'bill' => [
+                'id' => $bill->id,
+                'title' => $bill->title,
+                'total_amount' => $bill->total_amount,
+                'description' => $bill->description ?? '',
+                'status' => $bill->status ?? 'active',
+                'invitation_code' => $bill->invitation_code,
+            ],
         ]);
     }
 

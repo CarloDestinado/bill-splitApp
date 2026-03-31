@@ -25,7 +25,7 @@ function GuestRegistration() {
     // Check if coming from GuestLogin with pre-filled data
     if (location.state?.invitationCode && location.state?.email) {
       setInvitationCode(location.state.invitationCode);
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         email: location.state.email,
       }));
@@ -134,7 +134,9 @@ function GuestRegistration() {
         const firstError = Object.values(errors)[0];
         setError(Array.isArray(firstError) ? firstError[0] : firstError);
       } else {
-        const errorMsg = err.response?.data?.message || "Registration failed. Please try again.";
+        const errorMsg =
+          err.response?.data?.message ||
+          "Registration failed. Please try again.";
         setError(errorMsg);
       }
     } finally {
@@ -179,7 +181,9 @@ function GuestRegistration() {
                 {error && <div className="error-message">{error}</div>}
 
                 <div className="form-group">
-                  <label>Invitation Code <span className="required-asterisk">*</span></label>
+                  <label>
+                    Invitation Code <span className="required-asterisk">*</span>
+                  </label>
                   <input
                     type="text"
                     className="input-field code-input"
@@ -235,7 +239,9 @@ function GuestRegistration() {
                 {error && <div className="error-message">{error}</div>}
 
                 <div className="form-group">
-                  <label>Email <span className="required-asterisk">*</span></label>
+                  <label>
+                    Email <span className="required-asterisk">*</span>
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -253,7 +259,9 @@ function GuestRegistration() {
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label>First Name <span className="required-asterisk">*</span></label>
+                    <label>
+                      First Name <span className="required-asterisk">*</span>
+                    </label>
                     <input
                       type="text"
                       name="first_name"
@@ -266,7 +274,9 @@ function GuestRegistration() {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Last Name <span className="required-asterisk">*</span></label>
+                    <label>
+                      Last Name <span className="required-asterisk">*</span>
+                    </label>
                     <input
                       type="text"
                       name="last_name"
@@ -281,7 +291,9 @@ function GuestRegistration() {
                 </div>
 
                 <div className="form-group">
-                  <label>Username <span className="required-asterisk">*</span></label>
+                  <label>
+                    Username <span className="required-asterisk">*</span>
+                  </label>
                   <input
                     type="text"
                     name="username"
@@ -295,7 +307,9 @@ function GuestRegistration() {
                 </div>
 
                 <div className="form-group">
-                  <label>Nickname <span className="required-asterisk">*</span></label>
+                  <label>
+                    Nickname <span className="required-asterisk">*</span>
+                  </label>
                   <input
                     type="text"
                     name="nickname"
@@ -358,7 +372,8 @@ function GuestRegistration() {
             <li>
               <strong>Enter Your Details</strong>
               <p>
-                Provide your name, email, username, and nickname to create a guest account
+                Provide your name, email, username, and nickname to create a
+                guest account
               </p>
             </li>
             <li>

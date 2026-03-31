@@ -191,7 +191,7 @@ function Login() {
 
           <p className="divider">or continue with</p>
 
-          <Link to="/guest/registration" className="access-code-btn">
+          <Link to="/normal-registration" className="access-code-btn">
             🔍 Access Bill via Invitation Code
           </Link>
 

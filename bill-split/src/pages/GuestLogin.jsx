@@ -48,7 +48,7 @@ function GuestLogin() {
         // Store auth data
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
-        
+
         // Navigate to guest dashboard (works for both guest and registered users)
         navigate("/guest/dashboard", {
           state: {
@@ -57,6 +57,12 @@ function GuestLogin() {
             bill
           }
         });
+      } else if (action === 'redirect_to_login') {
+        // User is registered - redirect to regular login
+        setError(message);
+        setTimeout(() => {
+          navigate("/login", { state: { email } });
+        }, 2000);
       } else if (action === 'redirect_to_registration') {
         // Email doesn't exist - redirect to guest registration
         navigate("/guest/registration", {

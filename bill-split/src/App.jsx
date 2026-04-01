@@ -18,6 +18,7 @@ import BillDetail from './pages/BillDetail';
 import ForgotPass from './pages/ForgotPass';
 import ChangePass from './pages/ChangePass';
 import VerifyEmail from './pages/VerifyEmail';
+import SelectUsers from './pages/SelectUsers';
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -133,6 +134,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/select-users"
+          element={
+            <ProtectedRoute>
+              <SelectUsers />
             </ProtectedRoute>
           }
         />

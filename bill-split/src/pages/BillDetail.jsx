@@ -175,9 +175,11 @@ function BillDetail() {
             {bill.due_date && (
               <p className="bill-due">Due: {new Date(bill.due_date).toLocaleDateString()}</p>
             )}
-            <p className="bill-code">
-              Invitation Code: <code>{bill.invitation_code}</code>
-            </p>
+            {isCreator && (
+              <p className="bill-code">
+                Invitation Code: <code>{bill.invitation_code}</code>
+              </p>
+            )}
 
             {isCreator && !isGuest ? (
               <div className="action-btn-container">

@@ -110,7 +110,7 @@ function Login() {
         </div>
 
         <div className="login-right">
-          <h1>Welcome back!</h1>
+          <h1>Welcome!</h1>
           <p className="subtitle">
             Simplify your workflow and boost your productivity with Bill Split
           </p>

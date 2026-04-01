@@ -231,7 +231,15 @@ class AuthController extends Controller
             ], 200);
         }
 
-        // Email exists - auto-login the user (guest or registered)
+        // Check if user is a registered account - redirect to regular login
+        if ($user->user_type === 'registered') {
+            return response()->json([
+                'action' => 'redirect_to_login',
+                'message' => 'This email belongs to a registered account. Please use the regular login instead.',
+            ], 200);
+        }
+
+        // User is guest - login successfully
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([

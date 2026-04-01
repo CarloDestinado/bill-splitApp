@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'getProfile']);
     Route::put('/user/update', [UserController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/users/all', [UserController::class, 'getAllUsers']);
 
     // Email verification check
     Route::get('/email/verify/check', [EmailVerificationController::class, 'check']);

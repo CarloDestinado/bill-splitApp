@@ -157,20 +157,18 @@
 }
 
 .badge.standard {
-  background: linear-gradient(135deg, #94a3b8, #64748b);
-  color: #fff;
+  background: var(--primary-500);
+  color: white;
 }
 
 .badge.guest {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  background: var(--primary-500);
+  color: white;
 }
 
 .badge.registered {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  background: var(--primary-500);
+  color: white;
 }
 
 .upgrade-guest-section {

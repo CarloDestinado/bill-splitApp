@@ -77,4 +77,15 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
+    public function getAllUsers(Request $request)
+    {
+        $users = User::where('id', '!=', $request->user()->id)
+            ->select('id', 'first_name', 'last_name', 'username', 'email', 'user_type')
+            ->get();
+
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
 }

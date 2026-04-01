@@ -233,46 +233,51 @@ function Dashboard() {
             </div>
           ) : (
             <div className="bills-grid">
-              {filteredBills.map((bill) => (
-                <div key={bill.id} className="bill-card">
-                  <div className="bill-header">
-                    <h3>{bill.title}</h3>
-                    <span className={`status ${bill.status}`}>
-                      {bill.status}
-                    </span>
-                  </div>
-                  <div className="bill-amount">
-                    ₱{parseFloat(bill.total_amount).toFixed(2)}
-                  </div>
-                  <p className="bill-description">
-                    {bill.description || "No description"}
-                  </p>
-                  <div className="bill-footer">
-                    <span className="bill-code">
-                      Code: {bill.invitation_code}
-                    </span>
-                    <div className="bill-actions">
-                      {!isGuest && (
-                        <button
-                          className="btn btn-sm"
-                          onClick={() => {
-                            setSelectedBill(bill);
-                            setShowInviteModal(true);
-                          }}
-                        >
-                          Invite
-                        </button>
+              {filteredBills.map((bill) => {
+                const isCreator = bill.created_by === user?.id;
+                return (
+                  <div key={bill.id} className="bill-card">
+                    <div className="bill-header">
+                      <h3>{bill.title}</h3>
+                      <span className={`status ${bill.status}`}>
+                        {bill.status}
+                      </span>
+                    </div>
+                    <div className="bill-amount">
+                      ₱{parseFloat(bill.total_amount).toFixed(2)}
+                    </div>
+                    <p className="bill-description">
+                      {bill.description || "No description"}
+                    </p>
+                    <div className="bill-footer">
+                      {isCreator && (
+                        <span className="bill-code">
+                          Code: {bill.invitation_code}
+                        </span>
                       )}
-                      <Link
-                        to={`/bills/${bill.id}`}
-                        className="btn btn-sm btn-primary"
-                      >
-                        View
-                      </Link>
+                      <div className="bill-actions">
+                        {!isGuest && isCreator && (
+                          <button
+                            className="btn btn-sm"
+                            onClick={() => {
+                              setSelectedBill(bill);
+                              setShowInviteModal(true);
+                            }}
+                          >
+                            Invite
+                          </button>
+                        )}
+                        <Link
+                          to={`/bills/${bill.id}`}
+                          className="btn btn-sm btn-primary"
+                        >
+                          View
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -403,6 +408,7 @@ function CreateBillModal({ onClose, onCreated }) {
 
 function InviteModal({ bill, onClose }) {
   const { isPremium } = useAuth();
+  const navigate = useNavigate();
   const invitationCode = bill.invitation_code;
   const currentPersonCount = bill.users?.length || 0;
   const maxPersons = isPremium ? "unlimited" : 3;
@@ -412,6 +418,13 @@ function InviteModal({ bill, onClose }) {
     navigator.clipboard.writeText(invitationCode);
   };
 
+  const handleSelectUsers = () => {
+    navigate("/select-users", {
+      state: { billId: bill.id, billTitle: bill.title },
+    });
+    onClose();
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -419,6 +432,15 @@ function InviteModal({ bill, onClose }) {
           <h2>Invite to Bill: {bill.title}</h2>
           <button className="close-btn" onClick={onClose}>
             ×
+          </button>
+        </div>
+
+        <div className="modal-header-actions">
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={handleSelectUsers}
+          >
+            Select Users
           </button>
         </div>
 
@@ -434,7 +456,7 @@ function InviteModal({ bill, onClose }) {
           </div> */}
 
           <div className="invite-section">
-            <h3>Invitation Code</h3>
+            <h3>Or invite via code</h3>
             <div className="code-display">
               <code>{invitationCode}</code>
               <button className="btn btn-sm" onClick={copyCode}>

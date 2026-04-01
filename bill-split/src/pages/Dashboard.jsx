@@ -454,7 +454,6 @@ function InviteModal({ bill, onClose }) {
               </button>
             </div>
           </div> */}
-
           <div className="invite-section">
             <h3>Or invite via code</h3>
             <div className="code-display">

@@ -28,6 +28,9 @@
   width: 100%;
   padding: 0;
   margin-bottom: 1rem;  /* Space before content starts */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 /* Back button with margin for breathing room */
@@ -49,6 +52,33 @@
   margin-top: 1rem;
   margin-left: 1rem;
   pointer-events: auto;  /* Ensure clickability */
+}
+
+/* Refresh button */
+.refresh-btn {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--gray-200);
+  color: var(--gray-700);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 1rem;
+  margin-right: 1rem;
+  pointer-events: auto;
+}
+
+.refresh-btn:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  color: var(--primary-700);
 }
 
 .back-btn:hover {

@@ -207,12 +207,15 @@ class BillController extends Controller
         BillUser::create([
             'bill_id' => $bill->id,
             'user_id' => $user->id,
-            'share_amount' => $bill->total_amount / ($currentUsers + 1),
+            'share_amount' => 0, // Will be recalculated below
             'payment_status' => 'pending',
         ]);
 
-        // Recalculate share amounts
-        $totalUsers = $bill->users()->count() + 1;
+        // Reload bill with relationships
+        $bill->load('billUsers');
+
+        // Recalculate share amounts for ALL users (including the new one)
+        $totalUsers = $bill->users()->count(); // Already includes the new user
         $shareAmount = $bill->total_amount / $totalUsers;
 
         foreach ($bill->billUsers as $billUser) {

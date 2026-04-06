@@ -1,9 +1,10 @@
 /* Select Users Page */
 .select-users-page {
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .select-users-main {
@@ -12,6 +13,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  overflow-y: auto;
 }
 
 .select-users-content {
@@ -254,6 +256,29 @@
 .badge.registered {
   background: var(--primary-500);
   color: white;
+}
+
+.invite-action-cell {
+  width: 100px;
+  text-align: center;
+}
+
+.btn-invite-single {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.btn-invite-single:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 /* Scrollbar Styling */

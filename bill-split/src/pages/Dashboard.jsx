@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { billAPI } from "../services/api";
 import logo from "../assets/bill_split_logo.png"; // Import logo
@@ -18,16 +18,64 @@ function Dashboard() {
     remainingBillsThisMonth,
   } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [filter, setFilter] = useState("all"); // 'all', 'created', 'joined'
+  const [inviteStatus, setInviteStatus] = useState({ message: "", error: "" });
 
   useEffect(() => {
     loadBills();
   }, []);
+
+  const handleInviteSelectedUsers = async (billId, userEmails) => {
+    setLoading(true);
+    const results = [];
+
+    for (const email of userEmails) {
+      try {
+        console.log(`Inviting ${email} to bill ${billId}...`);
+        const response = await billAPI.share(billId, { email });
+        console.log(`Invite response for ${email}:`, response.data);
+        results.push({ email, success: true });
+      } catch (err) {
+        console.error(`Failed to invite ${email}:`, err.response?.data || err);
+        results.push({ email, success: false, message: err.response?.data?.message || "Failed to invite" });
+      }
+    }
+
+    const successCount = results.filter(r => r.success).length;
+    const failCount = results.filter(r => !r.success).length;
+
+    if (failCount === 0) {
+      setInviteStatus({ message: `Successfully invited ${successCount} user${successCount > 1 ? 's' : ''}!`, error: "" });
+    } else if (successCount > 0) {
+      setInviteStatus({ message: `Invited ${successCount} user${successCount > 1 ? 's' : ''}. ${failCount} failed.`, error: "" });
+    } else {
+      setInviteStatus({ message: "", error: results.map(r => `${r.email}: ${r.message}`).join(". ") });
+    }
+
+    // Refresh bills list
+    await loadBills();
+    setLoading(false);
+
+    // Auto-clear status message after 5 seconds
+    setTimeout(() => setInviteStatus({ message: "", error: "" }), 5000);
+  };
+
+  // Handle invite action from SelectUsers page
+  useEffect(() => {
+    const state = location.state;
+    if (state?.action === "invite_selected" && state?.billId && state?.selectedUserEmails) {
+      handleInviteSelectedUsers(state.billId, state.selectedUserEmails);
+      // Clear navigation state to prevent re-running
+      window.history.replaceState({}, document.title);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
 
   // Auto-logout for guest users when access hours reach 0
   useEffect(() => {
@@ -217,6 +265,13 @@ function Dashboard() {
                 bills.
               </p>
             </div>
+          )}
+
+          {inviteStatus.message && (
+            <div className="success-message">{inviteStatus.message}</div>
+          )}
+          {inviteStatus.error && (
+            <div className="error-message">{inviteStatus.error}</div>
           )}
 
           {loading ? (

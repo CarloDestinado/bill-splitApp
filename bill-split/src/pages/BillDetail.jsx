@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { billAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './BillDetail.css';
@@ -76,7 +76,7 @@ function BillDetail() {
   useEffect(() => {
     loadBill();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, location.state]);
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -143,6 +143,9 @@ function BillDetail() {
       <div className="bill-detail-topbar">
         <button className="back-btn" onClick={() => navigate('/dashboard')}>
           ← Back to Dashboard
+        </button>
+        <button className="refresh-btn" onClick={loadBill}>
+          ↻ Refresh
         </button>
       </div>
       <div className="bill-detail-content">

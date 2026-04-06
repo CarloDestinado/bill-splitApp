@@ -69,6 +69,35 @@ function SelectUsers() {
     }
   };
 
+  // Helper: get full user object(s) for selected IDs
+  const getSelectedUserObjects = () => {
+    return allUsers.filter(u => selectedUsers.includes(u.id));
+  };
+
+  const handleInviteSingle = (userId) => {
+    // Check limit
+    if (maxUsers !== Infinity && selectedUsers.length >= maxUsers && !selectedUsers.includes(userId)) {
+      setError(`You can only invite up to ${maxUsers} users to this bill (Standard plan limit).`);
+      return;
+    }
+
+    // Find the single user object
+    const singleUser = allUsers.find(u => u.id === userId);
+    if (!singleUser) {
+      setError('User not found.');
+      return;
+    }
+
+    // Navigate back with single user email
+    navigate('/dashboard', {
+      state: {
+        selectedUserEmails: [singleUser.email],
+        action: 'invite_selected',
+        billId: billData?.id
+      }
+    });
+  };
+
   const handleInviteSelected = () => {
     if (selectedUsers.length === 0) {
       setError('Please select at least one user to invite');
@@ -81,10 +110,14 @@ function SelectUsers() {
       return;
     }
 
-    // Navigate back with selected users
+    // Get full user objects to extract emails
+    const selectedUserObjects = getSelectedUserObjects();
+    const userEmails = selectedUserObjects.map(u => u.email);
+
+    // Navigate back with selected user emails
     navigate('/dashboard', {
       state: {
-        selectedUsers: selectedUsers,
+        selectedUserEmails: userEmails,
         action: 'invite_selected',
         billId: billData?.id
       }
@@ -173,6 +206,7 @@ function SelectUsers() {
                     <th>Username</th>
                     <th>Email</th>
                     <th>Type</th>
+                    <th className="invite-action-cell">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -180,27 +214,34 @@ function SelectUsers() {
                     <tr
                       key={u.id}
                       className={`user-row ${selectedUsers.includes(u.id) ? 'selected' : ''}`}
-                      onClick={() => handleSelectUser(u.id)}
                     >
-                      <td className="select-cell">
+                      <td className="select-cell" onClick={() => handleSelectUser(u.id)}>
                         <div className={`checkbox ${selectedUsers.includes(u.id) ? 'checked' : ''}`}>
                           {selectedUsers.includes(u.id) ? '✓' : ''}
                         </div>
                       </td>
-                      <td className="name-cell">
+                      <td className="name-cell" onClick={() => handleSelectUser(u.id)}>
                         <div className="user-avatar-small">
                           {u.first_name?.[0]}{u.last_name?.[0]}
                         </div>
                         <span className="user-fullname">{u.first_name} {u.last_name}</span>
                       </td>
-                      <td className="username-cell">@{u.username}</td>
-                      <td className="email-cell">{u.email}</td>
-                      <td className="type-cell">
+                      <td className="username-cell" onClick={() => handleSelectUser(u.id)}>@{u.username}</td>
+                      <td className="email-cell" onClick={() => handleSelectUser(u.id)}>{u.email}</td>
+                      <td className="type-cell" onClick={() => handleSelectUser(u.id)}>
                         {u.user_type === 'guest' ? (
                           <span className="badge guest">Guest</span>
                         ) : (
                           <span className="badge registered">Registered</span>
                         )}
+                      </td>
+                      <td className="invite-action-cell">
+                        <button
+                          className="btn btn-sm btn-invite-single"
+                          onClick={() => handleInviteSingle(u.id)}
+                        >
+                          Invite
+                        </button>
                       </td>
                     </tr>
                   ))}

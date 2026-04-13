@@ -1,13 +1,12 @@
 /* Register page styles - Modern Design */
 .register-page {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--gradient-primary);
   padding: 1rem;
   position: relative;
-  overflow: hidden;
 }
 
 /* Animated background elements */
@@ -33,13 +32,13 @@
   grid-template-columns: 1fr 1fr;
   width: 100%;
   max-width: 1200px;
-  height: 100%;
+  height: auto;
   max-height: 100vh;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-2xl);
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
   z-index: 1;
 }

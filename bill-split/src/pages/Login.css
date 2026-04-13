@@ -1,13 +1,12 @@
 /* Login page styles - Modern Design */
 .login-page {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--gradient-primary);
   padding: 1rem;
   position: relative;
-  overflow: hidden;
 }
 
 /* Animated background elements */
@@ -47,13 +46,13 @@
   grid-template-columns: 1fr 1fr;
   width: 100%;
   max-width: 1400px;
-  height: 100%;
+  height: auto;
   max-height: 100vh;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-2xl);
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
   z-index: 1;
 }
@@ -147,7 +146,7 @@
   color: #dc2626;
   padding: 1rem 1.25rem;
   border-radius: var(--radius-lg);
-  margin-bottom: 1.5rem;
+  margin-bottom: -1.5rem;
   font-size: 0.875rem;
   border: 1px solid #fecaca;
   display: flex;
@@ -242,7 +241,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: -1.5rem;
   align-items: flex-end;
 }
 
@@ -293,7 +292,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-base);
-  margin-bottom: 1.5rem;
+  margin-bottom: -0.5rem;
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
   position: relative;
   overflow: hidden;

@@ -24,10 +24,10 @@
 /* Top bar for back button */
 .profile-topbar {
   position: relative;
-  z-index: 2;
+  z-index: 10;
   width: 100%;
-  padding: 0;
-  margin-bottom: 1rem;
+  padding: 1rem 2rem;
+  background: transparent;
 }
 
 /* Back button with margin for breathing room */
@@ -46,8 +46,6 @@
   align-items: center;
   gap: 0.5rem;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
-  margin-top: 1rem;
-  margin-left: 1rem;
 }
 
 .back-btn:hover {
@@ -69,25 +67,35 @@
   padding: 0 2rem 2rem;
 }
 
-/* Stack container - now with a tighter max-width */
+/* Stack container - side-by-side layout */
 .profile-stack {
-  width: 80%;
-  max-width: 700px;  /* Reduced from 1000px for a more compact look */
+  width: 95%;
+  max-width: 1400px;
   min-width: 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.profile-card:nth-child(1) {
+  grid-column: 1;
+}
+
+.profile-card:nth-child(2) {
+  grid-column: 2;
 }
 
 .profile-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--radius-2xl);
-  padding: 2rem;
+  padding: 2.5rem;
   box-shadow: var(--shadow-xl);
   border: 1px solid rgba(255, 255, 255, 0.5);
   transition: all var(--transition-base);
   width: 100%;
+  min-height: calc(100vh - 200px);
 }
 
 .profile-card:hover {
@@ -118,33 +126,63 @@
   gap: 1rem;
 }
 
-.info-row {
+.info-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--slate-100);
+  gap: 1.25rem;
+  transition: all var(--transition-base);
+}
+
+.info-card:hover {
+  background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+  border-color: var(--primary-300);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.info-card .icon {
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-lg);
-  transition: background var(--transition-base);
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
 }
 
-.info-row:hover {
-  background: var(--slate-50);
+.info-card .info-content {
+  flex: 1;
+  min-width: 0;
 }
 
-.info-row:last-child {
-  border-bottom: none;
-}
-
-.info-row .label {
+.info-card .info-label {
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--slate-600);
-  font-size: 0.9rem;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
 }
 
-.info-row span:last-child {
-  font-weight: 500;
+.info-card .info-value {
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--slate-800);
+}
+
+.info-card .info-value .badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+}
+
+.info-card.full-width {
+  grid-column: 1 / -1;
 }
 
 .badge {
@@ -210,7 +248,7 @@
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -220,12 +258,12 @@
   display: block;
   font-weight: 600;
   color: var(--slate-700);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .form-group .input-field {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 1rem 1.25rem;
   border: 2px solid var(--slate-200);
   border-radius: var(--radius-lg);
   font-size: 1rem;
@@ -318,29 +356,27 @@
 }
 
 @media (max-width: 768px) {
-  .profile-topbar {
-    margin-bottom: 0.5rem;
+  .profile-stack {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
-  .back-btn {
-    margin-top: 0.75rem;
-    margin-left: 0.75rem;
+  .profile-card:nth-child(1),
+  .profile-card:nth-child(2) {
+    grid-column: 1;
+  }
+
+  .profile-card {
+    min-height: auto;
+    padding: 1.5rem;
+  }
+
+  .profile-topbar {
+    padding: 0.75rem 1rem;
   }
 
   .profile-content {
     padding: 0 1rem 1rem;
-  }
-
-  .profile-stack {
-    width: 95%;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-card {
-    padding: 1.5rem;
   }
 }
 
@@ -353,4 +389,9 @@
   .profile-card h2 {
     font-size: 1.125rem;
   }
+}
+
+/* Upgrade card spans full width */
+.profile-card:has(.upgrade-guest-section) {
+  grid-column: 1 / -1;
 }

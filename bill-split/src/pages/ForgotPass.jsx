@@ -33,17 +33,17 @@ function ForgotPass() {
 
     try {
       // Call backend to verify nickname/email and get reset token
-      const response = await authAPI.forgotPassword({ nickname, email });
+      await authAPI.forgotPassword({ nickname, email });
 
-      // Store token and redirect to change password page
-      const resetToken = response.data.token;
       setSuccess("Success! Redirecting...");
 
-      // Redirect to ChangePass page with token and email
+      // Store email and nickname in sessionStorage for the next page
+      sessionStorage.setItem('resetEmail', email);
+      sessionStorage.setItem('resetNickname', nickname);
+
+      // Redirect to ChangePass page
       setTimeout(() => {
-        navigate(`/change-password/${resetToken}`, {
-          state: { email, nickname },
-        });
+        navigate('/change-password');
       }, 1500);
     } catch (err) {
       const errors = err.response?.data?.errors;

@@ -162,14 +162,28 @@ const AuthProvider = ({ children }) => {
     isGuest: user?.user_type === 'guest',
     isPremium: user?.account_type === 'premium',
     isStandard: user?.account_type === 'standard',
-    canCreateBill: checkCanCreateBill(user),
-    canAccessBills: checkGuestAccessLimit(user),
-    remainingAccessHours: getRemainingAccessHours(user),
-    canAddPersonToBill: (currentPersonCount) => checkCanAddPerson(user, currentPersonCount),
-    remainingBillsThisMonth: getRemainingBillsThisMonth(user),
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  // Memoized access checks - compute once per user change, not per render
+  const canCreateBill = checkCanCreateBill(user);
+  const canAccessBills = checkGuestAccessLimit(user);
+  const remainingAccessHours = getRemainingAccessHours(user);
+  const remainingBillsThisMonth = getRemainingBillsThisMonth(user);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        ...value,
+        canCreateBill,
+        canAccessBills,
+        remainingAccessHours,
+        remainingBillsThisMonth,
+        canAddPersonToBill: (count) => checkCanAddPerson(user, count),
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 // Check if guest user has remaining access hours

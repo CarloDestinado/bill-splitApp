@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authAPI } from "../services/api";
 import "./ChangePass.css";
 
 function ChangePass() {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,8 +14,9 @@ function ChangePass() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Get email and nickname from previous page
-  const { email, nickname } = location.state || {};
+  // Get email and nickname from sessionStorage (set by ForgotPass page)
+  const email = sessionStorage.getItem('resetEmail');
+  const nickname = sessionStorage.getItem('resetNickname');
 
   // Redirect back if no data provided
   if (!email || !nickname) {
@@ -89,6 +89,9 @@ function ChangePass() {
         password_confirmation: formData.password_confirmation,
       });
 
+      // Clear sessionStorage and redirect to login after 2 seconds
+      sessionStorage.removeItem('resetEmail');
+      sessionStorage.removeItem('resetNickname');
       setSuccess("Success! Redirecting to login...");
 
       // Redirect to login after 2 seconds

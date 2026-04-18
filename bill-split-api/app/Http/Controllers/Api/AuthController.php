@@ -306,10 +306,9 @@ class AuthController extends Controller
         );
 
         // In a real application, you would send an email with the reset link
-        // For now, we'll return the token in the response for testing
+        // Token should ONLY be sent via email, never in API response
         return response()->json([
-            'message' => 'Password reset link generated successfully.',
-            'reset_token' => $token, // Remove this in production
+            'message' => 'Password reset link generated successfully. Please check your email.',
             'email' => $request->email,
         ]);
     }
@@ -325,7 +324,7 @@ class AuthController extends Controller
                 'min:8',
                 'max:16',
                 'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,16}$/',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@₱!%*?&#])[A-Za-z\d@₱!%*?&#]+$/',
             ],
         ], [
             'nickname.required' => 'Nickname is required.',

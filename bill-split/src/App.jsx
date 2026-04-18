@@ -178,7 +178,7 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/change-password/:token"
+          path="/change-password"
           element={
             <PublicRoute>
               <ChangePass />

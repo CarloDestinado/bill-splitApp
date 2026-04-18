@@ -10,6 +10,7 @@ function Profile() {
   const [formData, setFormData] = useState({
     first_name: user?.first_name || '',
     last_name: user?.last_name || '',
+    nickname: user?.nickname || '',
     email: user?.email || '',
   });
   const [passwordData, setPasswordData] = useState({
@@ -63,50 +64,8 @@ function Profile() {
 
   return (
     <div className="profile-page">
-      <div className="profile-topbar">
-        <button className="back-btn" onClick={() => navigate('/dashboard')}>
-          ← Back to Dashboard
-        </button>
-      </div>
       <div className="profile-content">
         <div className="profile-stack">
-          <div className="profile-card">
-            <h2>Account Information</h2>
-            <div className="account-info">
-              <div className="info-row">
-                <span className="label">Account Type:</span>
-                <span className={`badge ${user?.account_type}`}>
-                  {user?.account_type}
-                </span>
-              </div>
-              <div className="info-row">
-                <span className="label">User Type:</span>
-                <span className={`badge ${user?.user_type}`}>
-                  {user?.user_type}
-                </span>
-              </div>
-              {user?.user_type === 'guest' && (
-                <div className="info-row">
-                  <span className="label">Access Hours Used:</span>
-                  <span>{user?.access_hours_used || 0}/6 hours</span>
-                </div>
-              )}
-            </div>
-
-            {isGuest && (
-              <div className="upgrade-guest-section">
-                <h3>Upgrade to Standard Account</h3>
-                <p>Get full access to all features by setting a password</p>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setShowPasswordForm(!showPasswordForm)}
-                >
-                  {showPasswordForm ? 'Cancel' : 'Upgrade Account'}
-                </button>
-              </div>
-            )}
-          </div>
-
           <div className="profile-card">
             <h2>Personal Information</h2>
             <form onSubmit={handleProfileUpdate} noValidate>
@@ -137,6 +96,16 @@ function Profile() {
                 </div>
               </div>
               <div className="form-group">
+                <label>Nickname</label>
+                <input
+                  type="text"
+                  className="input-field"
+                  value={formData.nickname}
+                  onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                  placeholder="Nickname"
+                />
+              </div>
+              <div className="form-group">
                 <label>Email <span className="required-asterisk">*</span></label>
                 <input
                   type="email"
@@ -151,6 +120,56 @@ function Profile() {
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
             </form>
+          </div>
+
+          <div className="profile-card">
+            <h2>Account Information</h2>
+            <div className="account-info">
+              <div className="info-card">
+                <div className="icon">⭐</div>
+                <div className="info-content">
+                  <div className="info-label">Account Type</div>
+                  <div className="info-value">
+                    <span className={`badge ${user?.account_type}`}>
+                      {user?.account_type}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="info-card">
+                <div className="icon">👥</div>
+                <div className="info-content">
+                  <div className="info-label">User Type</div>
+                  <div className="info-value">
+                    <span className={`badge ${user?.user_type}`}>
+                      {user?.user_type}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {user?.user_type === 'guest' && (
+                <div className="info-card">
+                  <div className="icon">⏱️</div>
+                  <div className="info-content">
+                    <div className="info-label">Access Hours Used</div>
+                    <div className="info-value">{user?.access_hours_used || 0}/6 hours</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {isGuest && (
+              <div className="upgrade-guest-section">
+                <h3>Upgrade to Standard Account</h3>
+                <p>Get full access to all features by setting a password</p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => setShowPasswordForm(!showPasswordForm)}
+                >
+                  {showPasswordForm ? 'Cancel' : 'Upgrade Account'}
+                </button>
+              </div>
+            )}
           </div>
 
           {showPasswordForm && isGuest && (

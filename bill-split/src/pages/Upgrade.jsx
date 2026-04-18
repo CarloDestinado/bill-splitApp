@@ -10,9 +10,14 @@ function Upgrade() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [passwordData, setPasswordData] = useState({
-    password: '',
-    password_confirmation: '',
+  const [formData, setFormData] = useState({
+    last_name: user?.last_name || "",
+    first_name: user?.first_name || "",
+    nickname: user?.nickname || "",
+    email: user?.email || "",
+    username: user?.username || "",
+    password: "",
+    password_confirmation: "",
   });
   const [showPasswordForm, setShowPasswordForm] = useState(false);
 
@@ -38,57 +43,95 @@ function Upgrade() {
 
   const handleGuestToRegistered = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
-    if (passwordData.password !== passwordData.password_confirmation) {
-      setError('Passwords do not match');
+    // Validate all fields
+    if (!formData.first_name || formData.first_name.trim() === "") {
+      setError("First name is required");
+      return;
+    }
+    if (formData.first_name.includes(" ")) {
+      setError("First name cannot contain spaces");
+      return;
+    }
+
+    if (!formData.last_name || formData.last_name.trim() === "") {
+      setError("Last name is required");
+      return;
+    }
+    if (formData.last_name.includes(" ")) {
+      setError("Last name cannot contain spaces");
+      return;
+    }
+
+    if (!formData.nickname || formData.nickname.trim() === "") {
+      setError("Nickname is required");
+      return;
+    }
+
+    if (!formData.email || formData.email.trim() === "") {
+      setError("Email is required");
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    if (!formData.username || formData.username.trim() === "") {
+      setError("Username is required");
+      return;
+    }
+
+    if (formData.password !== formData.password_confirmation) {
+      setError("Passwords do not match");
       return;
     }
 
     // Validate password length
-    if (passwordData.password.length < 8) {
-      setError('Password must be at least 8 characters long.');
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters long.");
       return;
     }
 
-    if (passwordData.password.length > 16) {
-      setError('Password cannot be more than 16 characters long.');
+    if (formData.password.length > 16) {
+      setError("Password cannot be more than 16 characters long.");
       return;
     }
 
     // Validate password contains at least one uppercase letter
-    if (!/[A-Z]/.test(passwordData.password)) {
-      setError('Password must contain at least one uppercase letter.');
+    if (!/[A-Z]/.test(formData.password)) {
+      setError("Password must contain at least one uppercase letter.");
       return;
     }
 
     // Validate password contains at least one lowercase letter
-    if (!/[a-z]/.test(passwordData.password)) {
-      setError('Password must contain at least one lowercase letter.');
+    if (!/[a-z]/.test(formData.password)) {
+      setError("Password must contain at least one lowercase letter.");
       return;
     }
 
     // Validate password contains at least one number
-    if (!/\d/.test(passwordData.password)) {
-      setError('Password must contain at least one number.');
+    if (!/\d/.test(formData.password)) {
+      setError("Password must contain at least one number.");
       return;
     }
 
     // Validate password contains at least one special character
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(passwordData.password)) {
-      setError('Password must contain at least one special character (!@#$%^&*(),.?":{}|<>).');
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      setError("Password must contain at least one special character (!@#$%^&*(),.?\":{}|<>).");
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await authAPI.upgradeToRegistered(passwordData);
+      const response = await authAPI.upgradeToRegistered(formData);
       updateUser(response.data.user);
-      setSuccess('Successfully upgraded to Standard user!');
-      setTimeout(() => navigate('/dashboard'), 2000);
+      setSuccess("Successfully upgraded to Standard user! Please check your email to verify your account.");
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      setError(err.response?.data?.message || 'Upgrade failed');
+      setError(err.response?.data?.message || "Upgrade failed");
     } finally {
       setLoading(false);
     }
@@ -123,13 +166,70 @@ function Upgrade() {
               <form onSubmit={handleGuestToRegistered} noValidate className="upgrade-form">
                 {error && <div className="error-message">{error}</div>}
                 {success && <div className="success-message">{success}</div>}
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Last Name <span className="required-asterisk">*</span></label>
+                    <input
+                      type="text"
+                      className="input-field"
+                      value={formData.last_name}
+                      onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                      placeholder="Last Name (no spaces)"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>First Name <span className="required-asterisk">*</span></label>
+                    <input
+                      type="text"
+                      className="input-field"
+                      value={formData.first_name}
+                      onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                      placeholder="First Name (no spaces)"
+                      required
+                    />
+                  </div>
+                </div>
                 <div className="form-group">
-                  <label>Password</label>
+                  <label>Nickname <span className="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={formData.nickname}
+                    onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                    placeholder="Nickname (required, unique)"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email Address <span className="required-asterisk">*</span></label>
+                  <input
+                    type="email"
+                    className="input-field"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="Email Address"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Username <span className="required-asterisk">*</span></label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                    placeholder="Username (required, unique)"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Password <span className="required-asterisk">*</span></label>
                   <input
                     type="password"
                     className="input-field"
-                    value={passwordData.password}
-                    onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     placeholder="Password (8-16 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char)"
                     required
                     minLength="8"
@@ -137,12 +237,12 @@ function Upgrade() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Confirm Password</label>
+                  <label>Confirm Password <span className="required-asterisk">*</span></label>
                   <input
                     type="password"
                     className="input-field"
-                    value={passwordData.password_confirmation}
-                    onChange={(e) => setPasswordData({ ...passwordData, password_confirmation: e.target.value })}
+                    value={formData.password_confirmation}
+                    onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
                     placeholder="Confirm Password"
                     required
                     minLength="8"
@@ -157,7 +257,15 @@ function Upgrade() {
                   className="btn btn-secondary"
                   onClick={() => {
                     setShowPasswordForm(false);
-                    setPasswordData({ password: '', password_confirmation: '' });
+                    setFormData({
+                      last_name: user?.last_name || "",
+                      first_name: user?.first_name || "",
+                      nickname: user?.nickname || "",
+                      email: user?.email || "",
+                      username: user?.username || "",
+                      password: "",
+                      password_confirmation: "",
+                    });
                   }}
                 >
                   Cancel

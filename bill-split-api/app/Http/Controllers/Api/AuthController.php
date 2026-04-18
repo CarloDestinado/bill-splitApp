@@ -253,16 +253,52 @@ class AuthController extends Controller
     public function upgradeToRegistered(Request $request)
     {
         $request->validate([
-            'password' => 'required|string|min:8|confirmed',
+            'first_name' => 'required|string|max:255|regex:/^\S+$/',
+            'last_name' => 'required|string|max:255|regex:/^\S+$/',
+            'nickname' => 'required|string|max:255|unique:users,nickname,' . $request->user()->id,
+            'username' => 'required|string|max:255|unique:users,username,' . $request->user()->id,
+            'email' => 'required|email|unique:users,email,' . $request->user()->id,
+            'password' => 'required|string|min:8|max:16|confirmed',
+        ], [
+            'first_name.regex' => 'First name cannot contain spaces',
+            'last_name.regex' => 'Last name cannot contain spaces',
+            'nickname.unique' => 'This nickname is already taken',
+            'username.unique' => 'This username is already taken',
+            'email.unique' => 'This email is already in use',
         ]);
 
+        $password = $request->password;
+
+        // Manual password validation
+        if (!preg_match('/[a-z]/', $password)) {
+            return response()->json(['message' => 'Password must contain at least one lowercase letter.'], 422);
+        }
+        if (!preg_match('/[A-Z]/', $password)) {
+            return response()->json(['message' => 'Password must contain at least one uppercase letter.'], 422);
+        }
+        if (!preg_match('/\d/', $password)) {
+            return response()->json(['message' => 'Password must contain at least one number.'], 422);
+        }
+        if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+            return response()->json(['message' => 'Password must contain at least one special character (!@#$%^&*(),.?":{}|<>).'], 422);
+        }
+
         $user = $request->user();
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->nickname = $request->nickname;
+        $user->username = $request->username;
+        $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->user_type = 'registered';
+        $user->email_verified_at = null; // Require re-verification
         $user->save();
 
+        // Send verification email
+        $user->sendEmailVerificationNotification();
+
         return response()->json([
-            'message' => 'Account upgraded to registered user',
+            'message' => 'Account upgraded to registered user. Please check your email to verify your account.',
             'user' => $user,
         ]);
     }
